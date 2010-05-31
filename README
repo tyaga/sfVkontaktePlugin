@@ -1,0 +1,91 @@
+# sfVkontaktePlugin plugin (for symfony 1.3 (1.4)) #
+
+Installation:
+
+1) Fetch code from github git://github.com/tyaga/sfVkontaktePlugin.git
+
+2) Move folder sfVkontaktePlugin to SF_ROOT/plugins
+
+3) Enable plugin:
+
+SF_ROOT/config/ProjectConfiguration.class.php
+
+$this->enablePlugins('sfVkontaktePlugin');
+
+4) Enable the sfVkontakteFetch module to fetch friends and upload photos to VK server
+
+SF_ROOT/frontend/config/settings.yml
+
+enabled_modules:        [default, sfVkontakteFetch]
+
+5) Change routing options in factories.yml to automatically add mandatory iframe parameters to every link on your site.
+
+SF_ROOT/frontend/config/factories.yml
+
+all:
+  routing:
+    class: sfVkontaktePatternRouting
+    param:
+      generate_shortest_url:            true
+      extra_parameters_as_query_string: true
+
+6) Change security of your application
+
+SF_ROOT/frontend/config/security.yml
+
+default:
+  is_secure: true
+
+7) Add jQuery to view.yml (or use another way to enable jQuery)
+
+SF_ROOT/frontend/config/view.yml
+
+  javascripts:    [lib/jquery-1.4.2, main]
+
+8) Change inheritance of the myUser class
+
+SF_ROOT/frontend/lib/myUser.class.php
+
+class myUser extends sfVkontakteUser {
+
+9) Add initialization partial to your layout.php. Add it inside the <body> tag.
+
+SF_ROOT/frontend/templates/layout.php
+
+<? include_component('sfVkontakteFetch', 'init')?>
+
+10) Put your VK App settings in settings.yml
+
+$ cp SF_ROOT/plugins/sfVkontaktePlugin/config/settings-example.yml SF_ROOT/config/settings.yml
+$ vi SF_ROOT/config/settings.yml
+
+Optionally add SF_ROOT/config/settings.yml to your VCS ignore. It allow you to have two instances of your VK App with different settings
+
+11) Setup the database and model
+
+11.1) Add to your schema.yml this model schema:
+
+User:
+  actAs:
+    Timestampable: { updated: { disabled: true } }
+    Apiuser:
+
+  relations:
+    Friends:
+      class: User
+      local: user_from
+      foreign: user_to
+      refClass: FriendReference
+      equal: false
+
+FriendReference:
+  columns:
+    user_from: { type: integer, primary: true }
+    user_to:   { type: integer, primary: true }
+
+Currently you have to use name "User" to you user model, I will rewrite it soon.
+
+11.2) Build and load your schema
+$ ./symfony doctrine:build --all --and-load
+,or import sql manually.
+

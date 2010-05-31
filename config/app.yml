@@ -1,0 +1,50 @@
+all:
+  vkontakte:
+    api_url: http://api.vkontakte.ru/api.php
+    url: http://vkontakte.ru/
+
+    test_mode: false
+    format: JSON
+    api_version: 2.0
+
+    methods:
+      secure.sendNotification: { secure: true, fields: [uids, message],  text_fields: [message]}
+      secure.saveAppStatus: { secure: true, fields: [uid, status], text_fields: [status] }
+      secure.getAppStatus: { secure: true, fields: [uid] }
+      secure.getAppBalance: { secure: true, fields: [] }
+      secure.getBalance: { secure: true, fields: [uid] }
+      secure.addVotes: { secure: true, fields: [uid, votes] }
+      secure.withdrawVotes: { secure: true, fields: [uid, votes] }
+      secure.transferVotes: { secure: true, fields: [uid_from, uid_to, votes] }
+      secure.getTransactionsHistory: { secure: true, fields: [type, uid_from, uid_to, date_from, date_to, limit] }
+      secure.addRating: { secure: true, fields: [uid, rate, message], text_fields: [message]}
+      secure.setCounter: { secure: true, fields: [uid, counter] }
+
+      secure.getSMSHistory: { secure: true, fields: [uid, date_from, date_to, limit] }
+      secure.sendSMSNotification: { secure: true, fields: [uid, message], text_fields: [message] }
+      secure.getSMS: { secure: true, fields: [uid, date_from, date_to] }
+
+      secure.setLanguageValue: { secure: true, fields: [key, value, locale, description] }
+      secure.deleteLanguageValue: { secure: true, fields: [key] }
+
+    profile_fields:
+      first_name:   { type: string }
+      last_name:    { type: string }
+      nickname:     { type: string }
+      sex:          { type: integer }
+      bdate:        { type: string }
+      city:         { type: integer }
+      country:      { type: integer }
+      timezone:     { type: string }
+      photo:        { type: string }
+      photo_medium: { type: string }
+      photo_big:    { type: string }
+      has_mobile:   { type: boolean }
+      rate:         { type: float }
+      home_phone:   { type: string }
+      mobile_phone: { type: string }
+      university:   { type: integer }
+      university_name: { type: string }
+      faculty:      { type: integer }
+      faculty_name: { type: string }
+      graduation:   { type: integer }

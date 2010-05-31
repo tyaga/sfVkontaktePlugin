@@ -1,0 +1,6 @@
+all:
+  vkontakte:
+    application_id: 11111111
+    key: AAAaaaaAAA
+    encrypted_key: sx--ad34ad34ad34ad34ad34ad34ad34 # use http://xinit.ru/vk_app_secret/ to encrypt
+    secret_key: aaaAAAA111111111111

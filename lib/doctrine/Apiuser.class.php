@@ -1,0 +1,24 @@
+<?
+/**
+ * Apiuser doctrine listener  .
+ *
+ * @package	sfVkontaktePlugin
+ * @subpackage doctrine
+ * @author	 Alexey Tyagunov <atyaga@gmail.com>
+ */
+
+class Apiuser extends Doctrine_Template {
+
+	/**
+	 * @return
+	 */
+	public function setTableDefinition() {
+		// get columns from app.yml
+		$columns = sfConfig::get('app_vkontakte_profile_fields');
+
+		foreach ($columns as $fieldName => $options) {
+			$this->hasColumn($fieldName, $options['type']);
+		}
+		$this->hasColumn('fetched_at', 'datetime');
+	}
+}
