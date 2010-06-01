@@ -2,10 +2,7 @@
 
 ##Installation:
 
-1.  First, fetch code (git://github.com/tyaga/sfVkontaktePlugin.git)
-or download [source](http://github.com/tyaga/sfVkontaktePlugin/downloads)
-
-Move downloaded source to your plugin directory:
+1.  First, fetch code *git://github.com/tyaga/sfVkontaktePlugin.git* or download [source](http://github.com/tyaga/sfVkontaktePlugin/downloads). After that move downloaded source to your plugin directory:
 
 		$ cp ~/sfVkontaktePlugin SF_ROOT/plugins
 
@@ -48,15 +45,14 @@ Move downloaded source to your plugin directory:
 10.  Setup the database and model. Add to your User model actAs **Apiuser** behaviour. Currently you have to use name **User** to you user model, I will rewrite it soon.  
 
 		User:
-		  actAs:
-		    Apiuser:
+		  actAs: [Apiuser]
 
 11.  Build and load your schema, or import sql manually. Then publish plugin assets.
 
 		$ ./symfony doctrine:build --all --and-load
 		$./symfony plugin:publish:assets
 
-That's all.
+That's all, folks!
 
 ## Documentation
 
