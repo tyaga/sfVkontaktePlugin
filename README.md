@@ -2,7 +2,7 @@
 
 ##Installation:
 
-1.  First, fetch code from github git://github.com/tyaga/sfVkontaktePlugin.git
+1.  First, fetch code (git://github.com/tyaga/sfVkontaktePlugin.git)
 or download [source](http://github.com/tyaga/sfVkontaktePlugin/downloads)
 
 Move downloaded source to your plugin directory:
@@ -40,23 +40,23 @@ Move downloaded source to your plugin directory:
 
 		<? include_component('sfVkontakteFetch', 'init')?>
 
-9.  Put your VK App settings in settings.yml
+9.  Put your VK App settings in settings.yml. Optionally add SF_ROOT/config/settings.yml to your VCS ignore. It allow you to have two instances of your VK App with different settings
 
 		$ cp SF_ROOT/plugins/sfVkontaktePlugin/config/settings-example.yml SF_ROOT/config/settings.yml
 		$ vi SF_ROOT/config/settings.yml
 
-Optionally add SF_ROOT/config/settings.yml to your VCS ignore. It allow you to have two instances of your VK App with different settings
-
-10.  Setup the database and model, add to your schema.yml this model schema:
+10.  Setup the database and model. Add to your User model actAs **Apiuser** behaviour. Currently you have to use name **User** to you user model, I will rewrite it soon.  
 
 		User:
 		  actAs:
-	    	Timestampable: { updated: { disabled: true } }
 		    Apiuser:
 
-Currently you have to use name "User" to you user model, I will rewrite it soon.
-
-11.  Build and load your schema, or import sql manually. Then publish plugin assets
+11.  Build and load your schema, or import sql manually. Then publish plugin assets.
 
 		$ ./symfony doctrine:build --all --and-load
 		$./symfony plugin:publish:assets
+
+That's all.
+
+## Documentation
+
