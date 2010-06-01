@@ -8,7 +8,6 @@
  */
 
 class sfVkontakteFetchActions extends sfVkontakteActions {
-
 	public function executeProfiles(sfWebRequest $request) {
 		$result = false;
 		if ($this->getUser()->need_fetch) {
