@@ -89,3 +89,4 @@ Currently you have to use name "User" to you user model, I will rewrite it soon.
 $ ./symfony doctrine:build --all --and-load
 ,or import sql manually.
 
+12) $./symfony plugin:publish:assets
