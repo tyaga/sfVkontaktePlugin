@@ -27,14 +27,17 @@ App = {
 	after_fetch_friends_not: function() {
 	},
 
-	create: function(after_create, after_fetch_friends_done, after_fetch_friends_not ) {
+	create: function(after_create /*, after_fetch_friends_done, after_fetch_friends_not */) {
 		log('create');
 		if (App.encrypted_key != '') {
-			
 			App.after_create = after_create;
-			App.after_fetch_friends_done = after_fetch_friends_done;
-			App.after_fetch_friends_not = after_fetch_friends_not;
-
+			if ((arguments.length >= 2) && (typeof arguments[1] == 'function')) {
+				App.after_fetch_friends_done = after_fetch_friends_done;
+			}
+			if ((arguments.length >= 3) && (typeof arguments[2] == 'function')) {
+				App.after_fetch_friends_not = after_fetch_friends_not;
+			}
+			
 			api = new vk_api(App.encrypted_key, App.init, function(){ log('startup error'); });
 		}
 		else {
@@ -147,7 +150,7 @@ Upload = {
 	album_id: null,
 	upload_result: null,
 
-	photo: function(post_photo, album_title, server_method, upload_file_params) { log('Upload.photo');
+	photo: function(album_title, server_method, upload_file_params, post_photo) { log('Upload.photo');
 		if (album_title != '' && server_method != '') {
 			Upload.album_title = album_title;
 			Upload.server_method = server_method;
@@ -159,7 +162,7 @@ Upload = {
 			post_photo();
 		});
 	},
-	wall: function(post_post_wall, message, wall_id, server_method, upload_file_params) { log('Upload.wall');
+	wall: function(message, wall_id, server_method, upload_file_params, post_post_wall) { log('Upload.wall');
 		Upload.server_method = server_method;
 		Upload.upload_file_params = upload_file_params;
 

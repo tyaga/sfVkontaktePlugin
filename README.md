@@ -1,12 +1,19 @@
 # sfVkontaktePlugin plugin (for symfony 1.3 (1.4))
 
+##Requirements
+
+*   Symfony 1.3 and more
+*   Doctrine 1.2
+*   php-curl module to make VK Api POST requests
+*   jQuery 1.4.2 (maybe older version, not tested)
+
 ##Installation:
 
 1.  First, fetch code *git://github.com/tyaga/sfVkontaktePlugin.git* or download [source](http://github.com/tyaga/sfVkontaktePlugin/downloads). After that move downloaded source to your plugin directory:
 
 		$ cp ~/sfVkontaktePlugin SF_ROOT/plugins
 
-2.  Then enable plugin. To do it put this line to your SF_ROOT/config/ProjectConfiguration.class.php file:
+2.  Enable plugin. To do it put this line to your SF_ROOT/config/ProjectConfiguration.class.php file:
 
 		$this->enablePlugins('sfVkontaktePlugin');
 
@@ -55,4 +62,58 @@
 That's all, folks!
 
 ## Documentation
+
+### Server side, sfVkontakteTools class
+
+sfVkontaktePlugin provides you sfVkontakteTools class, that allows you to call secure VK Api function.
+In PLUGIN/config/app.yml you can see all secure methods provided by VK with theirs parameters. In any part of your project you can write:
+
+		$this->getUser()->secure_getBalance( array('uid' => $this->getUser()->id) );
+
+or
+		sfVkontakteTools::getInstance()->secure_getBalance( array('uid' => $this->getUser()->id) );
+
+, where secure_getBalance is the name of the method, and it calls with array of proper parameters.
+
+If you need to call for example the *secure.sendNotification* method, you would like to pass utf8 string (in russian) in the *message* parameter. Plugin will handle it and automaticaly make proper signature to the call.
+
+### Client side, App and Upload classes
+
+Usual way to use these classes is to write to your main.js code like this:
+
+	$(function() {
+		App.create(callback);
+	});
+
+The first parameter of the App.create method is the function, that will be called after all initialization. For example, you can write this code in that function. Lets have this html code, whatever:
+
+	<div id='content'></div>
+	<a id='post-photo' href='javascript:void(0);'>post_photo</a><br/>
+	<a id='post-wall' href='javascript:void(0);'>post wall</a>
+
+Then the code will be:
+
+	var callback =  function (){
+		// test use of the api object, retrieve viewer_id
+		$('#content').append(api.params.viewer_id);
+
+		// add onclick event - send photo to album
+		$('#post-photo').click(function() {
+			Upload.photo('new album', 'getPhoto', {}, function(){});
+		});
+		// add onclick event - send photo and message to the wall of user 11111
+		$('#post-wall').click(function() {
+			Upload.wall ('test', 11111, 'getPhoto', {}, function(){});
+		});
+	}
+
+Let's see on the Upload class. It has two public methods:
+
+*  Upload.photo(album_title, server_method, server_method_params, callback )
+*  Upload.wall(message, wall_id, server_method, server_method_params, callback )
+
+Also you can pass to the App.create method another two parameters:
+
+*  after_fetch_friends_done - it will be called after fetching friends.
+*  after_fetch_friends_not - it will be called if it is not nessesary to fetch friends.
 
