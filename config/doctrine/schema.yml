@@ -1,0 +1,8 @@
+FriendReference:
+  options:
+    symfony:
+      form:   false
+      filter: false
+  columns:
+   user_from: { type: integer, primary: true }
+   user_to:   { type: integer, primary: true }

@@ -24,7 +24,7 @@
  <notes>-</notes>
  <contents>
   <dir name="/">
-   <file role="data" name="README" />
+   <file role="data" name="README.md" />
    <file role="data" name="LICENSE" />
    <dir name="config">
      <!-- model -->

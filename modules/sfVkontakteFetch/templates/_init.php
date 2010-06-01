@@ -5,12 +5,11 @@
 	App.profile_fields = '<?=implode(',', array_keys(sfConfig::get('app_vkontakte_profile_fields')))?>';
 	App.fetch_url = '<?=url_for('@sf_vkontakte_fetch_profiles'); ?>';
 	App.upload_photo_url = '<?=url_for('@sf_vkontakte_upload_photo'); ?>';
-	App.need_fetch = true;
+	App.need_fetch = <?=$sf_user->need_fetch?'true':'false'?>;
 </script>
 
 <div id='allow-unnessesary-settings' style='display:none;'>Allow unnessesary settings</div>
 
-
-<div id='vk_api_msgbox'>Пожалуйста, установите приложение!</div>
+<!--<div id='vk_api_msgbox'>Пожалуйста, установите приложение!</div>-->
 
 <? endif; ?>

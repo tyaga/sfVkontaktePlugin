@@ -21,4 +21,21 @@ class Apiuser extends Doctrine_Template {
 		}
 		$this->hasColumn('fetched_at', 'datetime');
 	}
+	public function setUp() {
+		$this->hasMany('User as Friends', array(
+			'local' => 'user_from',
+			'foreign' => 'user_to',
+			'refClass' => 'FriendReference',
+			'equal'  => true
+		));
+		//$this->
+		//$this->_options['table'];
+	}
 }
+
+//class FriendReference extends Doctrine_Record {
+//    public function setTableDefinition() {
+//        $this->hasColumn('user_from', 'integer', null, array('primary'=>true));
+//        $this->hasColumn('user_to', 'integer', null, array('primary'=>true));
+//    }
+//}
