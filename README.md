@@ -1,4 +1,4 @@
-# sfVkontaktePlugin plugin (for symfony 1.3 (1.4))
+# sfVkontaktePlugin plugin for symfony 1.3
 
 ##Requirements
 
@@ -77,6 +77,11 @@ or
 
 If you need to call for example the *secure.sendNotification* method, you would like to pass utf8 string (in russian) in the *message* parameter. Plugin will handle it and automaticaly make proper signature to the call.
 
+### Links, routing, and security
+
+I let VKontakte to check authority of user. Vkontakte make it by checking GET parameters passed to the iframe. It means that we should pass to every link on our site these parameters. I choose the routing way to do it.
+Generally, it means that you should write every link code on the site by link_to or url_for functions.
+
 ### Client side, App and Upload classes
 
 Usual way to use these classes is to write to your main.js code like this:
@@ -107,13 +112,13 @@ Then the code will be:
 		});
 	}
 
-Let's see on the Upload class. It has two public methods:
-
-*  Upload.photo(album_title, server_method, server_method_params, callback )
-*  Upload.wall(message, wall_id, server_method, server_method_params, callback )
-
 Also you can pass to the App.create method another two parameters:
 
 *  after_fetch_friends_done - it will be called after fetching friends.
 *  after_fetch_friends_not - it will be called if it is not nessesary to fetch friends.
+
+Let's see on the Upload class. It has two public methods:
+
+*  Upload.photo(album_title, server_method, server_method_params, callback )
+*  Upload.wall(message, wall_id, server_method, server_method_params, callback )
 
