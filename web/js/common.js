@@ -202,6 +202,7 @@ Upload = {
 		api.call( 'photos.getAlbums' , {}, function(data) {
 			if (data.response) {
 				log('Try to recognize an album');
+				Upload.album_id = false;
 				for(var t in data.response) {
 					if (data.response[t]['title'] == Upload.album_title) {
 						Upload.album_id = data.response[t]['aid'];
@@ -217,7 +218,7 @@ Upload = {
 					});
 				}
 				else {
-					log('Album finded');
+					log('Album finded ' + Upload.album_id);
 					after_find_album();
 				}
 			}
