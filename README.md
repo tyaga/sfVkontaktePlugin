@@ -99,6 +99,8 @@ and
 
 ### Client side, App and Upload classes
 
+Special thanks to Alexander Zubakov <zubakov@xinit.ru> for his js library PLUGIN/web/js/lib/vk-js-api .
+
 Usual way to use these classes is to write to your main.js code like this:
 
 	$(function() {
