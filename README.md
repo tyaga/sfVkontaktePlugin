@@ -40,21 +40,24 @@
 
 		class myUser extends sfVkontakteUser {
 
-8.  Add initialization component to application layout.php. Add it inside the <body> tag.
+8.  Change inheritance of your actions.class.php .
+		class mainActions extends sfVkontakteActions {
+
+9.  Add initialization component to application layout.php. Add it inside the <body> tag.
 
 		<? include_component('sfVkontakteFetch', 'init')?>
 
-9.  Put your VK App settings in settings.yml. Optionally add SF_ROOT/config/settings.yml to your VCS ignore. It allow you to have two instances of your VK App with different settings
+10.  Put your VK App settings in settings.yml. Optionally add SF_ROOT/config/settings.yml to your VCS ignore. It allows you to have two instances of your VK App with different settings
 
 		$ cp SF_ROOT/plugins/sfVkontaktePlugin/config/settings-example.yml SF_ROOT/config/settings.yml
 		$ vi SF_ROOT/config/settings.yml
 
-10.  Setup the database and model. Add to your User model actAs **Apiuser** behaviour. Currently you have to use name **User** to you user model, I will rewrite it soon.  
+11.  Setup the database and model. Add to your User model actAs **Apiuser** behaviour. Currently you have to use name **User** to you user model, I will rewrite it soon.
 
 		User:
 		  actAs: [Apiuser]
 
-11.  Build and load your schema, or import sql manually. Then publish plugin assets.
+12.  Build and load your schema, or import sql manually. Then publish plugin assets.
 
 		$ ./symfony doctrine:build --all --and-load
 		$./symfony plugin:publish:assets
@@ -80,7 +83,19 @@ If you need to call for example the *secure.sendNotification* method, you would 
 ### Links, routing, and security
 
 I let VKontakte to check authority of user. Vkontakte make it by checking GET parameters passed to the iframe. It means that we should pass to every link on our site these parameters. I choose the routing way to do it.
-Generally, it means that you should write every link code on the site by link_to or url_for functions.
+Generally, it means that you should write every link code on the site by link_to or url_for functions. Also, all your applications that accessible from VK Iframe must be secured.
+
+### User
+
+In any place in your code you have an $user variable
+
+		$this->user // in actions, instance of model User class
+		$user 		// the same one in templates
+
+and
+
+		$this->getUser() // in actions, instance of sfVkontakteUser
+		$sf_user 		 // in templates
 
 ### Client side, App and Upload classes
 
