@@ -24,7 +24,12 @@ class sfVkontakteActions extends sfActions {
 		}
 
 		// add JS to response
-		sfContext::getInstance()->getResponse()->addJavascript('/sfVkontaktePlugin/js/lib/vk_api.js', 'first');
+		if (sfConfig::get('sf_debug')) {
+			sfContext::getInstance()->getResponse()->addJavascript('/sfVkontaktePlugin/js/lib/vk-jsapi/vk_api.js', 'first');
+		}
+		else {
+			sfContext::getInstance()->getResponse()->addJavascript('/sfVkontaktePlugin/js/lib/vk-jsapi/vk_api.min.js', 'first');
+		}
 		sfContext::getInstance()->getResponse()->addJavascript('/sfVkontaktePlugin/js/common.js', 'first');
 
 		parent::preExecute();
