@@ -8,23 +8,48 @@ all:
     api_version: 2.0
 
     methods:
+      # отправляет уведомление пользователю.
       secure.sendNotification: { secure: true, fields: [uids, message],  text_fields: [message]}
+      # сохраняет строку статуса приложения для последующего вывода в общем списке приложений на странице пользоваетеля.
       secure.saveAppStatus: { secure: true, fields: [uid, status], text_fields: [status] }
+
+      #возвращает строку статуса приложения, сохранённую при помощи secure.saveAppStatus.
       secure.getAppStatus: { secure: true, fields: [uid] }
+      # возвращает платежный баланс приложения.
       secure.getAppBalance: { secure: true, fields: [] }
+
+      # возвращает баланс пользователя на счету приложения.
       secure.getBalance: { secure: true, fields: [uid] }
-      secure.addVotes: { secure: true, fields: [uid, votes] }
+
+      # DEPRECATED переводит голоса со счета приложения на счет пользователя. 
+#      secure.addVotes: { secure: true, fields: [uid, votes] }
+
+      # DEPRECATED списывает голоса со счета пользователя на счет приложения.
       secure.withdrawVotes: { secure: true, fields: [uid, votes] }
-      secure.transferVotes: { secure: true, fields: [uid_from, uid_to, votes] }
+#      secure.transferVotes: { secure: true, fields: [uid_from, uid_to, votes] }
+
+      # возвращает историю транзакций внутри приложения.
       secure.getTransactionsHistory: { secure: true, fields: [type, uid_from, uid_to, date_from, date_to, limit] }
+
+      # поднимает пользователю рейтинг от имени приложения.
       secure.addRating: { secure: true, fields: [uid, rate, message], text_fields: [message]}
+
+      # устанавливает счетчик, который выводится пользователю жирным шрифтом в левом меню, если он добавил приложение в левое меню.
       secure.setCounter: { secure: true, fields: [uid, counter] }
 
+      # возвращает список SMS-уведомлений, отосланных приложением.
       secure.getSMSHistory: { secure: true, fields: [uid, date_from, date_to, limit] }
+
+      # отправляет SMS-уведомление на телефон пользователя.
       secure.sendSMSNotification: { secure: true, fields: [uid, message], text_fields: [message] }
+
+      # возвращает тексты SMS, полученные от пользователей приложения.
       secure.getSMS: { secure: true, fields: [uid, date_from, date_to] }
 
+      # создает языковую фразу для перевода на другие языки.
       secure.setLanguageValue: { secure: true, fields: [key, value, locale, description] }
+
+      # удаляет языковую фразу.
       secure.deleteLanguageValue: { secure: true, fields: [key] }
 
     profile_fields:
