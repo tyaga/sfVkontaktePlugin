@@ -12,7 +12,6 @@ class sfVkontakteFetchActions extends sfVkontakteActions {
 		$result = false;
 		if ($this->getUser()->need_fetch) {
 			$result = sfFetchHelper::setFetchedFriends( $this->user,
-				$request->getParameter('friends', array()),
 				$request->getParameter('friendsProfiles', array()),
 				$request->getParameter('myProfile', array()),
 				$request->getParameter('settings', null)

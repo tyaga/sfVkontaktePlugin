@@ -177,7 +177,7 @@ App = {
 			'var friends = API.getFriends();' +
 			'var friendsProfiles = API.getProfiles({"uids": friends, ' + fields_param + '});' +
 			'var myProfile = API.getProfiles({"uids": ' + VK.params.viewer_id + ', ' + fields_param + '});' +
-			'return {"friends": friends, "friendsProfiles": friendsProfiles, "myProfile": myProfile };';
+			'return {"friendsProfiles": friendsProfiles, "myProfile": myProfile };';
 
 			VK.api('execute', {'code': code}, function(data) {
 				data = data.response;

@@ -1,7 +1,7 @@
 <?
 
 class sfFetchHelper {
-	public static function setFetchedFriends($me, $friendIds, $profiles, $profile, $settings) {
+	public static function setFetchedFriends($me, $profiles, $profile, $settings) {
 		$userModelTable = sfConfig::get('app_vkontakte_user_model');
 
 		$fields = array_keys(sfConfig::get('app_vkontakte_profile_fields'));
@@ -14,13 +14,15 @@ class sfFetchHelper {
 		}
 		$me->settings = $settings;
 		$me->save();
-		if (empty($friendIds)) {
+		if (empty($profiles)) {
 			return true;
 		}
 		// prepare profiles_array
 		$profiles_array = array();
+		$friendIds = array();
 		foreach ($profiles as $profile) {
 			$profiles_array[$profile['uid']] = array();
+			$friendIds[]=$profile['uid'];
 			foreach ($fields as $field) {
 				if (isset($profile[$field]) && $profile[$field]!= '') {
 					$profiles_array[$profile['uid']][$field] = $profile[$field];
