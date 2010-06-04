@@ -11,7 +11,9 @@ class sfFetchHelper {
 			}
 		}
 		$me->save();
-
+		if (empty($friendIds)) {
+			return true;
+		}
 		// prepare profiles_array
 		$profiles_array = array();
 		foreach ($profiles as $profile) {

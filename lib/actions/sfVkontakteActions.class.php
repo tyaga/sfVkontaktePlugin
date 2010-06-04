@@ -23,13 +23,14 @@ class sfVkontakteActions extends sfActions {
 			$this->getUser()->need_fetch = $this->user->fetched_at < date('Y-m-d');
 		}
 
+		sfContext::getInstance()->getResponse()->addJavascript('http://vkontakte.ru/js/api/xd_connection.js?2', 'first');
 		// add JS to response
-		if (sfConfig::get('sf_debug')) {
+/*		if (sfConfig::get('sf_debug')) {
 			sfContext::getInstance()->getResponse()->addJavascript('/sfVkontaktePlugin/js/lib/vk-jsapi/vk_api.js', 'first');
 		}
 		else {
 			sfContext::getInstance()->getResponse()->addJavascript('/sfVkontaktePlugin/js/lib/vk-jsapi/vk_api.min.js', 'first');
-		}
+		}*/
 		sfContext::getInstance()->getResponse()->addJavascript('/sfVkontaktePlugin/js/common.js', 'first');
 
 		parent::preExecute();
