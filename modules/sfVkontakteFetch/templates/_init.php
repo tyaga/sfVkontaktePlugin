@@ -8,9 +8,9 @@
 	App.need_fetch = <?=$sf_user->need_fetch?'true':'false'?>;
 </script>
 
-<div id='sf_vkontakte_install' style='display:none;'>Пожалуйста, установите приложение!</div>
-<div id='sf_vkontakte_settings' style='display:none;'>Установите нужные настройки!</div>
-<div id='sf_vkontakte_unnessesary_settings' style='display:none;'>Установите необязательные настройки</div>
+<div id='sf_vkontakte_install' style='display:none;'>Please install Application!</div>
+<div id='sf_vkontakte_settings' style='display:none;'>Please set nessesary settings!</div>
+<div id='sf_vkontakte_unnessesary_settings' style='display:none;'>Please set settings</div>
 
 <? endif; ?>
 
