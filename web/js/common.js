@@ -6,17 +6,21 @@
  * @author	 Alexey Tyagunov <atyaga@gmail.com>
  */
 DEBUG = true;
-API = {
-	SETT_NOTIFY	   :    1, //allow to send notifications
-	SETT_FRIENDS   :    2, //add access to friends
-	SETT_PHOTOS    :    4, //add access to photos
-	SETT_AUDIO     :    8, //add access to audio
-	SETT_OFFER     :   32, //add access to offers
-	SETT_QUESTIONS :   64, //add access to questions
-	SETT_WIKI      :  128, //add access to Wiki-pages
-	SETT_MENU      :  256, //add access to left menu
-	SETT_WALL      :  512, //add access to user wall
-	SETT_STATUS    : 1024  //add access to user status
+
+/**
+ * Settings constants
+ */
+Settings = {
+	NOTIFY	  :    1, //allow to send notifications
+	FRIENDS   :    2, //add access to friends
+	PHOTOS    :    4, //add access to photos
+	AUDIO     :    8, //add access to audio
+	OFFER     :   32, //add access to offers
+	QUESTIONS :   64, //add access to questions
+	WIKI      :  128, //add access to Wiki-pages
+	MENU      :  256, //add access to left menu
+	WALL      :  512, //add access to user wall
+	STATUS    : 1024  //add access to user status
 };
 
 App = {
@@ -24,40 +28,57 @@ App = {
 	need_fetch: false,
 	profile_fields: null,
 
-	mandatory_settings: API.SETT_FRIENDS | API.SETT_NOTIFY | API.SETT_WALL,
-	unnessesary_settings: API.SETT_PHOTOS | API.SETT_MENU,
+	mandatory_settings: Settings.FRIENDS | Settings.NOTIFY | Settings.PHOTOS,
+	unnessesary_settings: Settings.MENU,
 
-	install_element: '#sf_vkontakte_install',
-	mandatory_settings_element: '#sf_vkontakte_settings',
-	unnessesary_settings_element: '#sf_vkontakte_unnessesary_settings',
+	install_element: 				'#sf_vkontakte_install',
+	mandatory_settings_element: 	'#sf_vkontakte_settings',
+	unnessesary_settings_element: 	'#sf_vkontakte_unnessesary_settings',
 
 	after_create: null,
 	after_fetch_friends_done: function() {},
 	after_fetch_friends_not: function() {},
 
+	/**
+	 * It is the very begining.
+	 * All the running code should be inside the after_create callback
+	 *
+	 * @param after_create
+	 */
 	create: function(after_create /*, after_fetch_friends_done, after_fetch_friends_not */) {
 		log('create');
+
+		// save the callback
 		App.after_create = after_create;
+
+		// @todo: remove it because it can be set outside
 		if ((arguments.length >= 2) && (typeof arguments[1] == 'function')) {
 			App.after_fetch_friends_done = after_fetch_friends_done;
 		}
 		if ((arguments.length >= 3) && (typeof arguments[2] == 'function')) {
 			App.after_fetch_friends_not = after_fetch_friends_not;
 		}
+		// @endtodo
+
+		// initialize and call App.init
 		VK.init(function() {
+
+			// load url parameters into VK.params
 			VK.loadParams(document.location.href);
-			App.init();
+
+			// run or install the app
+			if (VK.params.is_app_user != 0) {
+				App.run();
+			}
+			else {
+				App.install();
+			}
 		});
 	},
-	init: function() {
-		log('init');
-		if (VK.params.is_app_user != 0) {
-			App.run();
-		}
-		else {
-			App.install();
-		}
-	},
+	/**
+	 * Calls check settings and fetch profiles methods,
+	 * after all - call passed after_create callback
+	 */
 	run: function() {
 		log('run');
 		App.check_settings(function() {
@@ -67,9 +88,15 @@ App = {
 			});
 		});
 	},
+	/**
+	 * It checks settings, if it is OK - calls callback
+	 *
+	 * @param callback
+	 */
 	check_settings: function(callback) {
 		log('check settings');
-		// get settings
+
+		// just show element, do not stop running
 		if (!Tools.check_settings(VK.params.api_settings, App.unnessesary_settings)) {
 			log("Wrong unnessesary settings, show link");
 			$(App.unnessesary_settings_element).click(function() {
@@ -79,32 +106,40 @@ App = {
 				$(App.unnessesary_settings_element).hide();
 			});
 		}
+		// show element and bind callback to changed settings
 		if (Tools.check_settings(VK.params.api_settings, App.mandatory_settings)) {
 			log('Mandatory settings are OK, go forward');
 			callback();
 		}
 		else {
-		log("Wrong mandatory settings, can't run");
+			log("Wrong mandatory settings, can't run");
 			App.bind_and_do_if_settings_ok(App.mandatory_settings, function() {
+				// @todo: ??? callback();
 				App.run();
 			});
 			App.make_settings(App.mandatory_settings);
 		}
 	},
+	/**
+	 * Ask user to set required settings
+	 * @param settings
+	 */
 	make_settings: function(settings) {
 		if (!Tools.check_settings(VK.params.api_settings, settings)) {
 			App.show_message(App.mandatory_settings_element, function(){ VK.callMethod("showSettingsBox", settings); });
 			VK.callMethod("showSettingsBox", settings);
 		}
-		VK.addCallback('onSettingsChanged',
-			function(new_settings) {
-				VK.params.api_settings = new_settings;
-				if (Tools.check_settings(VK.params.api_settings, settings)) {
-					App.hide_message(App.mandatory_settings_element);
-				}
+		VK.addCallback('onSettingsChanged',function(new_settings) {
+			VK.params.api_settings = new_settings;
+			if (Tools.check_settings(VK.params.api_settings, settings)) {
+				App.hide_message(App.mandatory_settings_element);
 			}
-		);
+		});
 	},
+	/**
+	 * Ask user to install Application
+	 * @param callback
+	 */
 	make_install: function(callback) {
 		if (VK.params.is_app_user == 0) {
 			App.show_message(App.install_element, function(){ VK.callMethod('showInstallBox'); });
@@ -125,10 +160,19 @@ App = {
 	hide_message: function(id){
 		$(id).hide();
 	},
+	/**
+	 * Gets friends, friends profiles and user profile
+	 * Assigns user profile to App.User
+	 * Saves all data to server
+	 * 
+	 * @param callback
+	 */
 	fetch_profile: function(callback) {
+		// if we need to fetch friends?
 		if (App.need_fetch) {
 			log('fetch profile and friends');
 			var fields_param = '"fields": "' + App.profile_fields + '"';
+			// Code in VKScript lang
 			var code =
 			'var friends = API.getFriends();' +
 			'var friendsProfiles = API.getProfiles({"uids": friends, ' + fields_param + '});' +
@@ -138,6 +182,8 @@ App = {
 			VK.api('execute', {'code': code}, function(data) {
 				App.User = data.response.myProfile[0];
 				log("Friends and profiles fetched, tryng to send");
+
+				// save to server
 				$.post(App.fetch_url, data.response, function(result) {
 					if (result) {
 						log("Profiles sent, call callback done");
@@ -151,8 +197,10 @@ App = {
 				})
 			});
 		}
+		// if we do not need to fetch
 		else {
 			log('fetch profile');
+			// just retrieve current user profile
 			VK.api('getProfiles', { uids: VK.params.viewer_id, fields: App.profile_fields}, function(data){
 				App.User = data.response[0];
 				callback();
@@ -160,6 +208,9 @@ App = {
 		}
 
 	},
+	/**
+	 * Install application and ask user to make settings
+	 */
 	install: function() {
 		log('install');
 		App.make_install(function() {
@@ -169,6 +220,11 @@ App = {
 			App.make_settings(App.mandatory_settings);
 		});
 	},
+	/**
+	 * Bind onSettingsChanged callback and run callback if settings are OK
+	 * @param need_settings
+	 * @param callback
+	 */
 	bind_and_do_if_settings_ok: function(need_settings, callback) {
 		VK.addCallback('onSettingsChanged', function(current_settings) {
 			log('Settings changed');
@@ -179,7 +235,13 @@ App = {
 		});
 	}
 };
-
+/**
+ * Upload class
+ *
+ * Use it to upload photo to VK and
+ * to post message to Wall
+ *
+ */
 Upload = {
 	upload_server: null,
 	album_id: null,
@@ -190,6 +252,14 @@ Upload = {
 	server_method: null,
 	upload_file_params: null,
 
+	/**
+	 * Uploads photo to the album with passed title
+	 *
+	 * @param album_title
+	 * @param server_method
+	 * @param upload_file_params
+	 * @param post_photo
+	 */
 	photo: function(album_title, server_method, upload_file_params, post_photo) { log('Upload.photo');
 		if (album_title != '' && server_method != '') {
 			Upload.album_title = album_title;
@@ -202,6 +272,15 @@ Upload = {
 			post_photo();
 		});
 	},
+	/**
+	 * Posts message to the wall_id with photo
+	 *
+	 * @param message
+	 * @param wall_id
+	 * @param server_method
+	 * @param upload_file_params
+	 * @param post_post_wall
+	 */
 	wall: function(message, wall_id, server_method, upload_file_params, post_post_wall) { log('Upload.wall');
 		Upload.server_method = server_method;
 		Upload.upload_file_params = upload_file_params;
@@ -216,6 +295,7 @@ Upload = {
 			});
 		});
 	},
+
 	post: function(post_post) { log('Upload.post');
 		var upload_chain = function() {
 			Upload.get_server(function(){
