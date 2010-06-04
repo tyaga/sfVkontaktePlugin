@@ -19,6 +19,7 @@ class sfVkontakteApiUser extends Doctrine_Template {
 		foreach ($columns as $fieldName => $options) {
 			$this->hasColumn($fieldName, $options['type']);
 		}
+		$this->hasColumn('settings', 'integer');
 		$this->hasColumn('fetched_at', 'datetime');
 	}
 	public function setUp() {

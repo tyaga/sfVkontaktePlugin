@@ -12,13 +12,11 @@ class sfVkontakteFetchActions extends sfVkontakteActions {
 		$result = false;
 		if ($this->getUser()->need_fetch) {
 			$result = sfFetchHelper::setFetchedFriends( $this->user,
-				$request->getParameter('friends'), 
-				$request->getParameter('friendsProfiles'),
-				$request->getParameter('myProfile')
+				$request->getParameter('friends', array()),
+				$request->getParameter('friendsProfiles', array()),
+				$request->getParameter('myProfile', array()),
+				$request->getParameter('settings', null)
 			);
-			/*if ($this->cacheManager) {
-				$this->cacheManager->remove('@sf_cache_partial?module=main&action=_total&sf_cache_key=' . date('Ymd') . '_friends');
-			}*/
 		}
 		return $this->returnJSON($result);
 	}
@@ -27,9 +25,7 @@ class sfVkontakteFetchActions extends sfVkontakteActions {
 		$method = $request->getParameter('method');
 		$params = $request->getParameter('params', array());
 
-		//$filename = $method($params);
-		$filename = '@/home/tyaga/zebra.jpg';
-
+		$filename = sfVkontaktePhoto::$method($params);
 		if ($request->getParameter('mode') == 'photo') {
 			$paramname = 'file1';
 		}

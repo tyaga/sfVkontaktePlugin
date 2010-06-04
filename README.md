@@ -149,3 +149,5 @@ Let's see on the Upload class. It has two public methods:
 *  Upload.photo(album_title, server_method, server_method_params, callback )
 *  Upload.wall(message, wall_id, server_method, server_method_params, callback )
 
+On the server you should define a class with name sfVkontaktePhoto and this class must have a static method with name getPhoto, wich returns a path to the file need to upload. This method should get one parameter - it passes from client - **server_method_params**. Yes, I know, it is the first candidate to fully redesign.
+

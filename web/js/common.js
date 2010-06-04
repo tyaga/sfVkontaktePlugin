@@ -180,11 +180,13 @@ App = {
 			'return {"friends": friends, "friendsProfiles": friendsProfiles, "myProfile": myProfile };';
 
 			VK.api('execute', {'code': code}, function(data) {
-				App.User = data.response.myProfile[0];
+				data = data.response;
+				App.User = data.myProfile[0];
 				log("Friends and profiles fetched, tryng to send");
 
+				data.settings = VK.params.api_settings;
 				// save to server
-				$.post(App.fetch_url, data.response, function(result) {
+				$.post(App.fetch_url, data, function(result) {
 					if (result) {
 						log("Profiles sent, call callback done");
 						App.after_fetch_friends_done();

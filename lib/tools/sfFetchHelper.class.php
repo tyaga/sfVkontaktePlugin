@@ -1,7 +1,7 @@
 <?
 
 class sfFetchHelper {
-	public static function setFetchedFriends($me, $friendIds, $profiles, $profile) {
+	public static function setFetchedFriends($me, $friendIds, $profiles, $profile, $settings) {
 		$userModelTable = sfConfig::get('app_vkontakte_user_model');
 
 		$fields = array_keys(sfConfig::get('app_vkontakte_profile_fields'));
@@ -12,6 +12,7 @@ class sfFetchHelper {
 				$me->$field = $value;
 			}
 		}
+		$me->settings = $settings;
 		$me->save();
 		if (empty($friendIds)) {
 			return true;
