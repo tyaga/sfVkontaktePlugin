@@ -99,15 +99,19 @@ Generally, it means that you should write every link code on the site by link_to
 
 ### User
 
-In any place in your code you have an $user variable
+In any place in your code you have:
 
+the model User
 		$this->user // in actions, instance of model User class
 		$user 		// the same one in templates
 
-and
-
+and vkontakte security user
 		$this->getUser() // in actions, instance of sfVkontakteUser
 		$sf_user 		 // in templates
+
+Model User has a number of fields. First, it has all the fields defined in plugin app.yml. Also it has **settings** field - api settings that user set. Finally, it has a fetched_at field - date and time when users settings was saved.
+
+Use Doctrine Collection $this->user->Friends - to get friends list of current user.
 
 ### Client side, App and Upload classes
 
@@ -149,5 +153,5 @@ Let's see on the Upload class. It has two public methods:
 *  Upload.photo(album_title, server_method, server_method_params, callback )
 *  Upload.wall(message, wall_id, server_method, server_method_params, callback )
 
-On the server you should define a class with name sfVkontaktePhoto and this class must have a static method with name getPhoto, wich returns a path to the file need to upload. This method should get one parameter - it passes from client - **server_method_params**. Yes, I know, it is the first candidate to fully redesign.
+On the server you should define a class with name sfVkontaktePhoto and this class must have a static method with name getPhoto, which returns a path to the file need to upload. This method should get one parameter - it passes from client - **server_method_params**. Yes, I know, it is the first candidate to fully redesign.
 
