@@ -99,8 +99,6 @@ and
 
 ### Client side, App and Upload classes
 
-Special thanks to Alexander Zubakov <zubakov@xinit.ru> for his js library PLUGIN/web/js/lib/vk-js-api .
-
 Usual way to use these classes is to write to your main.js code like this:
 
 	$(function() {
@@ -117,7 +115,7 @@ Then the code will be:
 
 	var callback =  function (){
 		// test use of the api object, retrieve viewer_id
-		$('#content').append(api.params.viewer_id);
+		$('#content').append(App.User.first_name);
 
 		// add onclick event - send photo to album
 		$('#post-photo').click(function() {
