@@ -31,7 +31,7 @@ App = {
 	mandatory_settings_element: '#sf_vkontakte_settings',
 	unnessesary_settings_element: '#sf_vkontakte_unnessesary_settings',
 
-	after_create: function() {},
+	after_create: null,
 	after_fetch_friends_done: function() {},
 	after_fetch_friends_not: function() {},
 
@@ -136,7 +136,7 @@ App = {
 			'return {"friends": friends, "friendsProfiles": friendsProfiles, "myProfile": myProfile };';
 
 			VK.api('execute', {'code': code}, function(data) {
-				App.User = data.response.myProfile;
+				App.User = data.response.myProfile[0];
 				log("Friends and profiles fetched, tryng to send");
 				$.post(App.fetch_url, data.response, function(result) {
 					if (result) {

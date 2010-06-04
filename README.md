@@ -52,10 +52,18 @@
 		$ cp SF_ROOT/plugins/sfVkontaktePlugin/config/settings-example.yml SF_ROOT/config/settings.yml
 		$ vi SF_ROOT/config/settings.yml
 
-11.  Setup the database and model. Add to your User model actAs **Apiuser** behaviour. Currently you have to use name **User** to you user model, I will rewrite it soon.
+11.  Setup the database and model. Add to your user model actAs **sfVkontakteApiUser** behaviour.
 
 		User:
-		  actAs: [Apiuser]
+		  actAs: [sfVkontakteApiUser]
+
+You can specify the name of the user model in your app.yml:
+
+		all:
+		  vkontakte:
+		    user_model: Profile
+
+Default value is **User**.
 
 12.  Build and load your schema, or import sql manually. Then publish plugin assets.
 
@@ -79,6 +87,10 @@ or
 , where secure_getBalance is the name of the method, and it calls with array of proper parameters.
 
 If you need to call for example the *secure.sendNotification* method, you would like to pass utf8 string (in russian) in the *message* parameter. Plugin will handle it and automaticaly make proper signature to the call.
+
+Another example:
+		// in some action
+		$this->getUser()->secure_sendNotification(array('uids'=> $this->getUser()->id, 'message'=> 'it works!'));
 
 ### Links, routing, and security
 

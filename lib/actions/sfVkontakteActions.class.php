@@ -11,11 +11,12 @@ class sfVkontakteActions extends sfActions {
 	 * @return
 	 */
 	public function preExecute() {
+		$userModelTable = sfConfig::get('app_vkontakte_user_model');
 		if ($this->getUser()->id) {
 			// get or create model user
-			$this->user = UserTable::getInstance()->findOneById($this->getUser()->id);
+			$this->user = Doctrine_Core::getTable($userModelTable)->findOneById($this->getUser()->id);
 			if (!$this->user) {
-				$this->user = new User();
+				$this->user = new $userModelTable();
 				$this->user->id = $this->getUser()->id;
 				$this->user->save();
 			}

@@ -19,8 +19,7 @@ class sfVkontakteTools {
 		//		$this->user = sfContext::getInstance()->getUser();
 		$this->api_id = sfConfig::get('sf_vkontakte_application_id');
 		$this->secret_raw = sfConfig::get('sf_vkontakte_key');
-		$this->secret_enc = sfConfig::get('sf_vkontakte_encrypted_key');
-		$this->api_secret = sfConfig::get('sf_vkontakte_api_secret_key');
+		$this->api_secret = sfConfig::get('sf_vkontakte_secret_key');
 
 		$this->format = sfConfig::get('app_vkontakte_format');
 		$this->test_mode = sfConfig::get('app_vkontakte_test_mode');
@@ -156,7 +155,7 @@ class sfVkontakteTools {
 			}
 		}
 		$params = array_merge(array('method' => $method), $params);
-
+		
 		$sig = $this->getSignature($params);
 		$params = $this->getParams($params, '&', $encodingSafe);
 

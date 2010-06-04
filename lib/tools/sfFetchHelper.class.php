@@ -2,6 +2,8 @@
 
 class sfFetchHelper {
 	public static function setFetchedFriends($me, $friendIds, $profiles, $profile) {
+		$userModelTable = sfConfig::get('app_vkontakte_user_model');
+
 		$fields = array_keys(sfConfig::get('app_vkontakte_profile_fields'));
 
 		// update current user $profile
@@ -25,9 +27,9 @@ class sfFetchHelper {
 			}
 		}
 		// prepare users and referenses
-		$users = UserTable::getInstance()->createQuery()
+		$users = Doctrine_Core::getTable($userModelTable)->createQuery()
 				->select()
-				->from('User u INDEXBY id')
+				->from($userModelTable.' u INDEXBY id')
 				->whereIn('id', $friendIds)
 				->execute();
 		$friendReferences = FriendReferenceTable::getInstance()->createQuery()
@@ -44,7 +46,7 @@ class sfFetchHelper {
 			// if there is no user, create one
 			$user = isset($users[$userId])?$users[$userId]:false;
 			if( !$user) {
-				$user = new User();
+				$user = new $userModelTable();
 				$user->id = $userId;
 				$changed = true;
 			}

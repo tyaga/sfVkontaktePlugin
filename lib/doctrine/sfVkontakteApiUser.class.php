@@ -1,13 +1,13 @@
 <?
 /**
- * Apiuser doctrine listener  .
+ * sfVkontakteApiUser doctrine listener  .
  *
  * @package	sfVkontaktePlugin
  * @subpackage doctrine
  * @author	 Alexey Tyagunov <atyaga@gmail.com>
  */
 
-class Apiuser extends Doctrine_Template {
+class sfVkontakteApiUser extends Doctrine_Template {
 
 	/**
 	 * @return
@@ -22,7 +22,8 @@ class Apiuser extends Doctrine_Template {
 		$this->hasColumn('fetched_at', 'datetime');
 	}
 	public function setUp() {
-		$this->hasMany('User as Friends', array(
+		$userModelTable = sfConfig::get('app_vkontakte_user_model');
+		$this->hasMany($userModelTable . ' as Friends', array(
 			'local' => 'user_from',
 			'foreign' => 'user_to',
 			'refClass' => 'FriendReference',

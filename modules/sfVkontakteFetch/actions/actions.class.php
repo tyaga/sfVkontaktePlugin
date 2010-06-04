@@ -25,7 +25,7 @@ class sfVkontakteFetchActions extends sfVkontakteActions {
 	public function executeUploadPhoto(sfWebRequest $request) {
 		$server = $request->getParameter('server');
 		$method = $request->getParameter('method');
-		$params = $request->getParameter('params');
+		$params = $request->getParameter('params', array());
 
 		//$filename = $method($params);
 		$filename = '@/home/tyaga/zebra.jpg';

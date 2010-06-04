@@ -1,5 +1,7 @@
 all:
   vkontakte:
+    user_model: User
+
     api_url: http://api.vkontakte.ru/api.php
     url: http://vkontakte.ru/
 
