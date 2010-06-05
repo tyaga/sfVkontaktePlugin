@@ -53,16 +53,14 @@
 
 10.  Setup the database and model. Add to your user model actAs **sfVkontakteApiUser** behaviour.
 
+		// doctrine/schema.yml
 		User:
 		  actAs: [sfVkontakteApiUser]
 
-  You can specify the name of the user model in your app.yml:
-
+		// You can specify the name of the user model in your app.yml:
 		all:
 		  vkontakte:
-		    user_model: Profile
-
-  Default value is **User**.
+		    user_model: Profile # Default value is **User**.
 
 11.  Build and load your schema, or import sql manually. Then publish plugin assets.
 
