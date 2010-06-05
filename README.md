@@ -1,6 +1,8 @@
 # sfVkontaktePlugin plugin for symfony 1.3 and 1.4
 
-##Requirements
+This plugin is still in development. 
+
+##Requirements:
 
 *   Symfony 1.3 and more
 *   Doctrine 1.2
@@ -9,7 +11,7 @@
 
 ##Installation:
 
-1.  First, fetch code *git://github.com/tyaga/sfVkontaktePlugin.git*. After that move downloaded source to your plugin directory and enable plugin in SF_ROOT/config/ProjectConfiguration.class.php:
+1.  Fetch code , move downloaded source to your plugin directory and enable plugin in SF_ROOT/config/ProjectConfiguration.class.php:
 
 		$ cp ~/sfVkontaktePlugin SF_ROOT/plugins
 
@@ -42,7 +44,7 @@
 7.  Change inheritance of your actions.class.php .
 		class mainActions extends sfVkontakteActions {
 
-8.  Add initialization component to application layout.php. Add it inside the &lt;body&t; tag.
+8.  Add initialization component to application layout.php. Add it inside the &lt;body&gt; tag.
 
 		<? include_component('sfVkontakteFetch', 'init')?>
 
@@ -64,7 +66,7 @@
 
 That's all, folks!
 
-## Configuration
+## Configuration:
 
 As stated before, you must copy config/settings-example.yml to your config directory and change application_id and secret_key values.
 
@@ -86,9 +88,9 @@ Other configuration is in the app.yml file:
 5.	user_model - the name of the user model, obviously. Default value is **User**.
 6.	upload_path - path to uploaded images for save photo and post to wall.
 
-Condition of fetching friends and profiles is defined in sfVkontakteUser, in the getNeedFetch method. So you can write own method in your myUser class and redefine this behaviour. 
+Condition of fetching friends and profiles is defined in sfVkontakteUser, in the getNeedFetch method, so you can write own method in your myUser class to redefine this behaviour. 
 
-## Documentation
+## Documentation:
 
 ### Server side, sfVkontakteTools class
 
@@ -125,11 +127,11 @@ and vkontakte security user
 		$this->getUser() // in actions, instance of sfVkontakteUser
 		$sf_user 		 // in templates
 
-Model User has a number of fields. First, it has all the fields defined in plugin app.yml. Also it has **settings** field - api settings that user set. Finally, it has a fetched_at field - date and time when users settings was saved.
+Model User has a number of fields. First, it has all the fields defined in plugin app.yml. Also it has **settings** field - api settings that user set. Finally, it has a fetched_at field - date and time when users settings were saved.
 
 Use Doctrine Collection $this->user->Friends - to get friends list of current user.
 
-These fields automatically updating every 24 hours.
+These fields automatically updating every 24 hours (it can be changed by redefine getNeedFetch of your myUser class).
 
 ### Client side, App and Upload classes
 
@@ -173,7 +175,7 @@ Let's see on the Upload class. It has two public methods:
 
 On the server you should define a class with name sfVkontaktePhoto and this class must have a static method with name getPhoto, which returns a path to the file need to upload. This method should get one parameter - it passes from client - **server_method_params**. Yes, I know, it is the first candidate to fully redesign.
 
-## Todo
+## Todo:
 
 1.	Rewrite getPhoto and all around it.
 2.	Move FriendReference model to the actAs behaviour.
