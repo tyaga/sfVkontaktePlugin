@@ -43,7 +43,7 @@
 8.  Change inheritance of your actions.class.php .
 		class mainActions extends sfVkontakteActions {
 
-9.  Add initialization component to application layout.php. Add it inside the <body> tag.
+9.  Add initialization component to application layout.php. Add it inside the &lt;body&t; tag.
 
 		<? include_component('sfVkontakteFetch', 'init')?>
 
@@ -79,18 +79,18 @@ That's all, folks!
 sfVkontaktePlugin provides you sfVkontakteTools class, that allows you to call secure VK Api function.
 In PLUGIN/config/app.yml you can see all secure methods provided by VK with theirs parameters. In any part of your project you can write:
 
-		$this->getUser()->secure_getBalance( array('uid' => $this->getUser()->id) );
+		$this->getUser()->getBalance( array('uid' => $this->getUser()->id) );
 
 or
-		sfVkontakteTools::getInstance()->secure_getBalance( array('uid' => $this->getUser()->id) );
+		sfVkontakteTools::getInstance()->getBalance( array('uid' => $this->getUser()->id) );
 
-, where secure_getBalance is the name of the method, and it calls with array of proper parameters.
+, where getBalance is the name of the method, and it calls with array of proper parameters.
 
-If you need to call for example the *secure.sendNotification* method, you would like to pass utf8 string (in russian) in the *message* parameter. Plugin will handle it and automaticaly make proper signature to the call.
+If you need to call for example the *sendNotification* method, you would like to pass utf8 string (in russian) in the *message* parameter. Plugin will handle it and automaticaly make proper signature to the call.
 
 Another example:
 		// in some action
-		$this->getUser()->secure_sendNotification(array('uids'=> $this->getUser()->id, 'message'=> 'it works!'));
+		$this->getUser()->sendNotification(array('uids'=> $this->getUser()->id, 'message'=> 'it works!'));
 
 ### Links, routing, and security
 
@@ -112,6 +112,8 @@ and vkontakte security user
 Model User has a number of fields. First, it has all the fields defined in plugin app.yml. Also it has **settings** field - api settings that user set. Finally, it has a fetched_at field - date and time when users settings was saved.
 
 Use Doctrine Collection $this->user->Friends - to get friends list of current user.
+
+These fields automatically updating every 24 hours.
 
 ### Client side, App and Upload classes
 
@@ -155,3 +157,7 @@ Let's see on the Upload class. It has two public methods:
 
 On the server you should define a class with name sfVkontaktePhoto and this class must have a static method with name getPhoto, which returns a path to the file need to upload. This method should get one parameter - it passes from client - **server_method_params**. Yes, I know, it is the first candidate to fully redesign.
 
+## Todo
+
+1.	Add checker of if we need to fetch profile and friends - remove one time in day hardcode.
+2.	Rewrite getPhoto and all around it.

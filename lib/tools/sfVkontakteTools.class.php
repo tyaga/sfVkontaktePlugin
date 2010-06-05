@@ -6,7 +6,7 @@
  * @subpackage tools
  * @author	 Alexey Tyagunov <atyaga@gmail.com>
  *
- * usage: $this->getUser()->secure_getBalance( array('uid' => $this->getUser()->id) );
+ * usage: $this->getUser()->getBalance( array('uid' => $this->getUser()->id) );
  */
 
 class sfVkontakteTools {
@@ -93,11 +93,12 @@ class sfVkontakteTools {
 		if ($this->test_mode) {
 			$params = array_merge($params, array('test_mode' => 1));
 		}
-		if ($this->isSecure($params['method'])) {
+		$checkMethod = str_replace('secure.', '', $params['method']);
+		if ($this->isSecure($checkMethod)) {
 			$params = array_merge($params, array('test_mode' => 0));
 		}
 		// add additional params if secure method
-		if ($this->isSecure($params['method'])) {
+		if ($this->isSecure($checkMethod)) {
 			if (!($this->timestamp && $this->random)) {
 				$this->random = rand(10000, 99999);
 				$this->timestamp = time();
@@ -145,17 +146,19 @@ class sfVkontakteTools {
 	private function retrieve($method, $params = array()) {
 		$encodingSafe = false;
 		// check field exists and need of POST method
+		$checkMethod = str_replace('secure.', '', $method);
+
 		foreach ($params as $k => $param) {
-			if (!$this->hasParameter($method, $k)) {
-				throw new sfException('Error, there is no parameter "' . $k . '" in method "' . $method . '" in API');
+			if (!$this->hasParameter($checkMethod, $k)) {
+				throw new sfException('Error, there is no parameter "' . $k . '" in method "' . $checkMethod . '" in API');
 			}
 			// need of POST
-			if (!$encodingSafe && $this->isSafeEncParameter($method, $k)) {
+			if (!$encodingSafe && $this->isSafeEncParameter($checkMethod, $k)) {
 				$encodingSafe = true;
 			}
 		}
 		$params = array_merge(array('method' => $method), $params);
-		
+
 		$sig = $this->getSignature($params);
 		$params = $this->getParams($params, '&', $encodingSafe);
 
@@ -264,12 +267,12 @@ class sfVkontakteTools {
 		$arguments = $_arguments;
 
 		// workaround on method name
-		$name = str_replace('_', '.', $name);
+		$callName = 'secure.'.$name;
 
 		// check method exists
 		if (!array_key_exists($name, $this->methods)) {
 			throw new sfException('Error, there is no method "' . $name . '" in API');
 		}
-		return $this->retrieve($name, $arguments);
+		return $this->retrieve($callName, $arguments);
 	}
 }
