@@ -15,15 +15,11 @@ class sfVkontakteTools {
 	private $timestamp, $random;
 
 	private function  __construct() {
-		//  no use - no unsecure methods
-		//		$this->user = sfContext::getInstance()->getUser();
-		$this->api_id = sfConfig::get('sf_vkontakte_application_id');
-		$this->secret_raw = sfConfig::get('sf_vkontakte_key');
-		$this->api_secret = sfConfig::get('sf_vkontakte_secret_key');
+		$this->application_id = sfConfig::get('sf_vkontakte_application_id');
+		$this->secret_key = sfConfig::get('sf_vkontakte_secret_key');
 
 		$this->format = sfConfig::get('app_vkontakte_format');
-		$this->test_mode = sfConfig::get('app_vkontakte_test_mode');
-		$this->vk_url = sfConfig::get('app_vkontakte_api_url');
+		$this->api_url = sfConfig::get('app_vkontakte_api_url');
 		$this->api_version = sfConfig::get('app_vkontakte_api_version');
 
 		$this->methods = sfConfig::get('app_vkontakte_methods');
@@ -41,28 +37,7 @@ class sfVkontakteTools {
 	}
 
 	/**
-	 * is calling method secure?
-	 *
-	 * @param string $method
-	 * @return boolean
-	 */
-	private function isSecure($method) {
-		return isset($this->methods[$method]['secure']) && $this->methods[$method]['secure'];
-	}
-
-	/**
-	 * Do method has parameter param?
-	 *
-	 * @param string $method
-	 * @param string $param
-	 * @return boolean
-	 */
-	private function hasParameter($method, $param) {
-		return in_array($param, $this->methods[$method]['fields']);
-	}
-
-	/**
-	 * Is method need POST request?
+	 * Do method needs POST request?
 	 *
 	 * @param string $method
 	 * @param string $param
@@ -84,27 +59,18 @@ class sfVkontakteTools {
 	 */
 	private function getParams($params, $delimeter = '&', $return_array = false) {
 		$prepend = array(
-			'api_id' => $this->api_id,
+			'api_id' => $this->application_id,
 			'v' => $this->api_version,
 			'format' => $this->format
 		);
 		$params = array_merge($prepend, $params);
 
-		if ($this->test_mode) {
-			$params = array_merge($params, array('test_mode' => 1));
-		}
-		$checkMethod = str_replace('secure.', '', $params['method']);
-		if ($this->isSecure($checkMethod)) {
-			$params = array_merge($params, array('test_mode' => 0));
-		}
 		// add additional params if secure method
-		if ($this->isSecure($checkMethod)) {
-			if (!($this->timestamp && $this->random)) {
-				$this->random = rand(10000, 99999);
-				$this->timestamp = time();
-			}
-			$params = array_merge($params, array('random' => $this->random, 'timestamp' => $this->timestamp));
+		if (!($this->timestamp && $this->random)) {
+			$this->random = rand(10000, 99999);
+			$this->timestamp = time();
 		}
+		$params = array_merge($params, array('random' => $this->random, 'timestamp' => $this->timestamp));
 		// sort by name
 		ksort($params);
 
@@ -121,22 +87,6 @@ class sfVkontakteTools {
 	}
 
 	/**
-	 * Format signature for query
-	 *
-	 * @param array $params
-	 * @return string
-	 */
-	private function getSignature($params) {
-		//if ($this->isSecure($params['method'])) {
-		return md5(implode('', array($this->getParams($params, '', false), $this->api_secret)));
-		//}
-		//else {
-		// no use for unsecure methods
-		//return md5(implode('',array($this->user->id, $this->getParams($params, '', false), $this->secret_raw)));
-		//}
-	}
-
-	/**
 	 * perform method call
 	 *
 	 * @param string $method
@@ -147,9 +97,8 @@ class sfVkontakteTools {
 		$encodingSafe = false;
 		// check field exists and need of POST method
 		$checkMethod = str_replace('secure.', '', $method);
-
 		foreach ($params as $k => $param) {
-			if (!$this->hasParameter($checkMethod, $k)) {
+			if (!in_array($k, $this->methods[$checkMethod]['fields'])) {
 				throw new sfException('Error, there is no parameter "' . $k . '" in method "' . $checkMethod . '" in API');
 			}
 			// need of POST
@@ -159,16 +108,16 @@ class sfVkontakteTools {
 		}
 		$params = array_merge(array('method' => $method), $params);
 
-		$sig = $this->getSignature($params);
+		$sig = md5(implode('', array($this->getParams($params, '', false), $this->secret_key)));
 		$params = $this->getParams($params, '&', $encodingSafe);
 
 		// get or post query to API
 		if ($encodingSafe) {
-			$url = $this->vk_url;
+			$url = $this->api_url;
 			$output = $this->api_call($url, 'POST', array_merge(array('sig' => $sig), $params));
 		}
 		else {
-			$url = $this->vk_url . '?' . $params . '&sig=' . $sig;
+			$url = $this->api_url . '?' . $params . '&sig=' . $sig;
 			$output = $this->api_call($url, 'GET');
 		}
 		// reset timestamp and random
@@ -178,7 +127,11 @@ class sfVkontakteTools {
 			$result = json_decode($output);
 
 			if (!isset($result->response)) {
-				throw new sfException('API error: ID=' . $result->error->error_code . ' ' . $result->error->error_msg . '. Params: ' . $params . '. Signature: ' . $sig . '. URL: ' . $url);
+				$paramsStr = '';
+				foreach($params as $k=>$param){
+					$paramsStr .= "\nk=" . $k . '=' . $param;
+				}
+				throw new sfException('API error: ID=' . $result->error->error_code . ' ' . $result->error->error_msg . ".\n\n Params: " . $paramsStr . '. Signature: ' . $sig . ".\n\n URL: " . $url);
 			}
 			return $result->response;
 		}
@@ -197,7 +150,7 @@ class sfVkontakteTools {
 		// check function exists
 		if ($method == 'POST') {
 			if (!function_exists('curl_init')) {
-				throw new sfException('Error: Could not connect to VK API');
+				throw new sfException('Error: Could not connect to VK API - no CURL installed');
 			}
 			return $this->curl_call($url, 'POST', $parameters);
 		}
@@ -210,7 +163,7 @@ class sfVkontakteTools {
 					return $this->fgc_call($url);
 				}
 				else {
-					throw new sfException('Error: Could not connect to VK API');
+					throw new sfException('Error: Could not connect to VK API - no URL_FOPEN enabled');
 				}
 			}
 		}
@@ -248,7 +201,7 @@ class sfVkontakteTools {
 	 * @param array|string $parameters
 	 * @return string
 	 */
-	private function fgc_call($url, $http_method, $parameters = array()) {
+	private function fgc_call($url, $http_method = 'GET', $parameters = array()) {
 		return file_get_contents($url);
 	}
 

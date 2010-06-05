@@ -1,5 +1,4 @@
 all:
   vkontakte:
     application_id: 11111111
-    key: AAAaaaaAAA
     secret_key: aaaAAAA111111111111

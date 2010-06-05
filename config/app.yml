@@ -12,48 +12,48 @@ all:
 
     methods:
       # отправляет уведомление пользователю.
-      sendNotification: { secure: true, fields: [uids, message],  text_fields: [message]}
+      sendNotification: { fields: [uids, message],  text_fields: [message]}
       # сохраняет строку статуса приложения для последующего вывода в общем списке приложений на странице пользоваетеля.
-      saveAppStatus: { secure: true, fields: [uid, status], text_fields: [status] }
+      saveAppStatus: { fields: [uid, status], text_fields: [status] }
 
       #возвращает строку статуса приложения, сохранённую при помощи saveAppStatus.
-      getAppStatus: { secure: true, fields: [uid] }
+      getAppStatus: { fields: [uid] }
       # возвращает платежный баланс приложения.
-      getAppBalance: { secure: true, fields: [] }
+      getAppBalance: { fields: [] }
 
       # возвращает баланс пользователя на счету приложения.
-      getBalance: { secure: true, fields: [uid] }
+      getBalance: { fields: [uid] }
 
       # DEPRECATED переводит голоса со счета приложения на счет пользователя. 
-#      addVotes: { secure: true, fields: [uid, votes] }
+#      addVotes: { fields: [uid, votes] }
 
       # DEPRECATED списывает голоса со счета пользователя на счет приложения.
-      withdrawVotes: { secure: true, fields: [uid, votes] }
-#      transferVotes: { secure: true, fields: [uid_from, uid_to, votes] }
+      withdrawVotes: { fields: [uid, votes] }
+#      transferVotes: { fields: [uid_from, uid_to, votes] }
 
       # возвращает историю транзакций внутри приложения.
-      getTransactionsHistory: { secure: true, fields: [type, uid_from, uid_to, date_from, date_to, limit] }
+      getTransactionsHistory: { fields: [type, uid_from, uid_to, date_from, date_to, limit] }
 
       # поднимает пользователю рейтинг от имени приложения.
-      addRating: { secure: true, fields: [uid, rate, message], text_fields: [message]}
+      addRating: { fields: [uid, rate, message], text_fields: [message]}
 
       # устанавливает счетчик, который выводится пользователю жирным шрифтом в левом меню, если он добавил приложение в левое меню.
-      setCounter: { secure: true, fields: [uid, counter] }
+      setCounter: { fields: [uid, counter] }
 
       # возвращает список SMS-уведомлений, отосланных приложением.
-      getSMSHistory: { secure: true, fields: [uid, date_from, date_to, limit] }
+      getSMSHistory: { fields: [uid, date_from, date_to, limit] }
 
       # отправляет SMS-уведомление на телефон пользователя.
-      sendSMSNotification: { secure: true, fields: [uid, message], text_fields: [message] }
+      sendSMSNotification: { fields: [uid, message], text_fields: [message] }
 
       # возвращает тексты SMS, полученные от пользователей приложения.
-      getSMS: { secure: true, fields: [uid, date_from, date_to] }
+      getSMS: { fields: [uid, date_from, date_to] }
 
       # создает языковую фразу для перевода на другие языки.
-      setLanguageValue: { secure: true, fields: [key, value, locale, description] }
+      setLanguageValue: { fields: [key, value, locale, description] }
 
       # удаляет языковую фразу.
-      deleteLanguageValue: { secure: true, fields: [key] }
+      deleteLanguageValue: { fields: [key] }
 
     profile_fields:
       first_name:   { type: string }
