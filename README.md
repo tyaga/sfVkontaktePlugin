@@ -9,7 +9,7 @@
 
 ##Installation:
 
-1.  First, fetch code *git://github.com/tyaga/sfVkontaktePlugin.git*. After that move downloaded source to your plugin directory and enable plugin in SF_ROOT/config/ProjectConfiguration.class.php:
+1.  Fetch code , move downloaded source to your plugin directory and enable plugin in SF_ROOT/config/ProjectConfiguration.class.php:
 
 		$ cp ~/sfVkontaktePlugin SF_ROOT/plugins
 
@@ -42,7 +42,7 @@
 7.  Change inheritance of your actions.class.php .
 		class mainActions extends sfVkontakteActions {
 
-8.  Add initialization component to application layout.php. Add it inside the &lt;body&t; tag.
+8.  Add initialization component to application layout.php. Add it inside the &lt;body&gt; tag.
 
 		<? include_component('sfVkontakteFetch', 'init')?>
 
