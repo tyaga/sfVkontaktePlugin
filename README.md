@@ -56,13 +56,13 @@
 		User:
 		  actAs: [sfVkontakteApiUser]
 
-You can specify the name of the user model in your app.yml:
+  You can specify the name of the user model in your app.yml:
 
 		all:
 		  vkontakte:
 		    user_model: Profile
 
-Default value is **User**.
+  Default value is **User**.
 
 12.  Build and load your schema, or import sql manually. Then publish plugin assets.
 
