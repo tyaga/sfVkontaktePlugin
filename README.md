@@ -20,7 +20,7 @@
 
 		enabled_modules: [default, sfVkontakteFetch]
 
-3.  Change routing options in factories.yml to automatically add mandatory iframe parameters to every link on your site. Change parameter in your SF_ROOT/frontend/config/factories.yml
+3.  Change routing options in factories.yml to automatically add mandatory iframe parameters to every link on your site. Change parameter in your SF_ROOT/frontend/config/factories.yml. Or you can set the enable_append_get_params configuration to false. See Configuration chapter.
 
 		all:
 		  routing:
@@ -57,11 +57,6 @@
 		User:
 		  actAs: [sfVkontakteApiUser]
 
-		// You can specify the name of the user model in your app.yml:
-		all:
-		  vkontakte:
-		    user_model: Profile # Default value is **User**.
-
 11.  Build and load your schema, or import sql manually. Then publish plugin assets.
 
 		$ ./symfony doctrine:build --all --and-load
@@ -88,7 +83,7 @@ Other configuration is in the app.yml file:
 2.	enable_register_routes - do or not automatically add fetch and upload photo routes to the routing collection. If it is setted to false, you should write these routing rules in your routing.yml file.
 3.	enable_add_js - do or not add javascript files to the response. If it is setted to false, you should add required JS to your view.yml file or to js compressor paths. The required js are "http://vkontakte.ru/js/api/xd_connection.js?2" and "/sfVkontaktePlugin/js/common.js".
 4.	enable_append_get_params - do or not append to every uri of every link on your site the get params, which passed from iframe. If it is setted to false, you must manage security of your app by yourself.
-5.	user_model - the name of the user model, obviously.
+5.	user_model - the name of the user model, obviously. Default value is **User**.
 6.	upload_path - path to uploaded images for save photo and post to wall.
 
 Condition of fetching friends and profiles is defined in sfVkontakteUser, in the getNeedFetch method. So you can write own method in your myUser class and redefine this behaviour. 
@@ -183,3 +178,4 @@ On the server you should define a class with name sfVkontaktePhoto and this clas
 1.	Rewrite getPhoto and all around it.
 2.	Move FriendReference model to the actAs behaviour.
 3.	Make post to wall work with a number of walls.
+4.	Rewrite common.js file to clear and proper view - I need help to do it, because I'm not a specialist in JS, actually.
