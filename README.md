@@ -72,6 +72,30 @@ Default value is **User**.
 
 That's all, folks!
 
+## Configuration
+
+As stated before, you must copy config/settings-example.yml to your config directory and change application_id and secret_key values.
+
+Other configuration is in the app.yml file:
+
+    	enable:
+	      fetch: true
+	      register_routes: true
+	      add_js: true
+	      append_get_params: true
+
+	    user_model: User
+	    upload_path: /web/sfVkontaktePlugin/images/uploads/
+
+1.	enable_fetch - do or not save user profile, user friends and profiles of user friends to the database.
+2.	enable_register_routes - do or not automatically add fetch and upload photo routes to the routing collection. If it is setted to false, you should write these routing rules in your routing.yml file.
+3.	enable_add_js - do or not add javascript files to the response. If it is setted to false, you should add required JS to your view.yml file or to js compressor paths. The required js are "http://vkontakte.ru/js/api/xd_connection.js?2" and "/sfVkontaktePlugin/js/common.js".
+4.	enable_append_get_params - do or not append to every uri of every link on your site the get params, which passed from iframe. If it is setted to false, you must manage security of your app by yourself.
+5.	user_model - the name of the user model, obviously.
+6.	upload_path - path to uploaded images for save photo and post to wall.
+
+Condition of fetching friends and profiles is defined in sfVkontakteUser, in the getNeedFetch method. So you can write own method in your myUser class and redefine this behaviour. 
+
 ## Documentation
 
 ### Server side, sfVkontakteTools class

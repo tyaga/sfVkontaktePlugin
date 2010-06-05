@@ -21,12 +21,13 @@ class sfVkontakteActions extends sfActions {
 				$this->user->save();
 			}
 			// if we need to fetch profiles
-			$this->getUser()->need_fetch = $this->user->fetched_at < date('Y-m-d');
+			$this->getUser()->need_fetch = sfConfig::get('app_vkontakte_enable_fetch') && $this->getUser()->getNeedFetch($this->user);
 		}
-
-		// add JS to response
-		sfContext::getInstance()->getResponse()->addJavascript('http://vkontakte.ru/js/api/xd_connection.js?2', 'first');
-		sfContext::getInstance()->getResponse()->addJavascript('/sfVkontaktePlugin/js/common.js', 'first');
+		if (sfConfig::get('app_vkontakte_enable_add_js')) {
+			// add JS to response
+			sfContext::getInstance()->getResponse()->addJavascript('http://vkontakte.ru/js/api/xd_connection.js?2', 'first');
+			sfContext::getInstance()->getResponse()->addJavascript('/sfVkontaktePlugin/js/common.js', 'first');
+		}
 
 		parent::preExecute();
 	}

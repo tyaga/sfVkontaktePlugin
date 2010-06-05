@@ -1,8 +1,15 @@
 all:
   vkontakte:
+
+    enable_fetch: true
+    enable_register_routes: true
+    enable_add_js: true
+    enable_append_get_params: true
+
     user_model: User
     upload_path: /web/sfVkontaktePlugin/images/uploads/
 
+## There is no need to edit this config below
     api_url: http://api.vkontakte.ru/api.php
     url: http://vkontakte.ru/
 

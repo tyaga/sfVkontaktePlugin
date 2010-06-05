@@ -28,7 +28,14 @@ class sfVkontakteUser extends sfBasicSecurityUser {
 			$this->id = $request->getParameter('viewer_id');
 		}
 	}
-
+	/**
+	 * if we need to fetch profiles
+	 * @param  $user
+	 * @return bool
+	 */
+	public function getNeedFetch($user) {
+		return $user->fetched_at < date('Y-m-d');
+	}
 	/**
 	 *
 	 * @param string $name

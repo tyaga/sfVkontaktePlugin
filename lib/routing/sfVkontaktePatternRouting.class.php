@@ -9,6 +9,8 @@
 
 class sfVkontaktePatternRouting extends sfPatternRouting {
 	public function generate($name, $params = array(), $absolute = false) {
-		return parent::generate($name, $params, $absolute) . '?' . $_SERVER['QUERY_STRING'];
+		return sfConfig::get('app_vkontakte_enable_append_get_params')?
+				(parent::generate($name, $params, $absolute) . '?' . $_SERVER['QUERY_STRING']):
+				(parent::generate($name, $params, $absolute));
 	}
 }
