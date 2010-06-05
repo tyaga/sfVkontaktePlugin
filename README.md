@@ -1,4 +1,4 @@
-# sfVkontaktePlugin plugin for symfony 1.3
+# sfVkontaktePlugin plugin for symfony 1.3 and 1.4
 
 ##Requirements
 
@@ -9,50 +9,49 @@
 
 ##Installation:
 
-1.  First, fetch code *git://github.com/tyaga/sfVkontaktePlugin.git* or download [source](http://github.com/tyaga/sfVkontaktePlugin/downloads). After that move downloaded source to your plugin directory:
+1.  First, fetch code *git://github.com/tyaga/sfVkontaktePlugin.git*. After that move downloaded source to your plugin directory and enable plugin in SF_ROOT/config/ProjectConfiguration.class.php:
 
 		$ cp ~/sfVkontaktePlugin SF_ROOT/plugins
 
-2.  Enable plugin. To do it put this line to your SF_ROOT/config/ProjectConfiguration.class.php file:
-
+		// SF_ROOT/config/ProjectConfiguration.class.php
 		$this->enablePlugins('sfVkontaktePlugin');
 
-3.  Enable the sfVkontakteFetch module to fetch friends and upload photos to VK server. Add this line to your SF_ROOT/frontend/config/settings.yml file:
+2.  Enable the sfVkontakteFetch module to fetch friends and upload photos to VK server. Add this line to your SF_ROOT/frontend/config/settings.yml file:
 
 		enabled_modules: [default, sfVkontakteFetch]
 
-4.  Change routing options in factories.yml to automatically add mandatory iframe parameters to every link on your site. Change parameter in your SF_ROOT/frontend/config/factories.yml
+3.  Change routing options in factories.yml to automatically add mandatory iframe parameters to every link on your site. Change parameter in your SF_ROOT/frontend/config/factories.yml
 
 		all:
 		  routing:
 		    class: sfVkontaktePatternRouting
 
-5.  Change security settings of your application in SF_ROOT/frontend/config/security.yml
+4.  Change security settings of your application in SF_ROOT/frontend/config/security.yml
 
 		default:
 		  is_secure: true
 
-6.  Download jQuery library and add link to it into view.yml of your application (or use another way to enable jQuery)
+5.  Download jQuery library and add link to it into view.yml of your application (or use another way to enable jQuery)
 
 		javascripts:    [lib/jquery-1.4.2, main]
 
-7.  Change inheritance of the myUser class in SF_ROOT/frontend/lib/myUser.class.php
+6.  Change inheritance of the myUser class in SF_ROOT/frontend/lib/myUser.class.php
 
 		class myUser extends sfVkontakteUser {
 
-8.  Change inheritance of your actions.class.php .
+7.  Change inheritance of your actions.class.php .
 		class mainActions extends sfVkontakteActions {
 
-9.  Add initialization component to application layout.php. Add it inside the &lt;body&t; tag.
+8.  Add initialization component to application layout.php. Add it inside the &lt;body&t; tag.
 
 		<? include_component('sfVkontakteFetch', 'init')?>
 
-10.  Put your VK App settings in settings.yml. Optionally add SF_ROOT/config/settings.yml to your VCS ignore. It allows you to have two instances of your VK App with different settings
+9.  Put your VK App settings in settings.yml. Optionally add SF_ROOT/config/settings.yml to your VCS ignore. It allows you to have two instances of your VK App with different settings
 
 		$ cp SF_ROOT/plugins/sfVkontaktePlugin/config/settings-example.yml SF_ROOT/config/settings.yml
 		$ vi SF_ROOT/config/settings.yml
 
-11.  Setup the database and model. Add to your user model actAs **sfVkontakteApiUser** behaviour.
+10.  Setup the database and model. Add to your user model actAs **sfVkontakteApiUser** behaviour.
 
 		User:
 		  actAs: [sfVkontakteApiUser]
