@@ -64,7 +64,7 @@
 
   Default value is **User**.
 
-12.  Build and load your schema, or import sql manually. Then publish plugin assets.
+11.  Build and load your schema, or import sql manually. Then publish plugin assets.
 
 		$ ./symfony doctrine:build --all --and-load
 		$./symfony plugin:publish:assets
