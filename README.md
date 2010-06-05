@@ -182,5 +182,6 @@ On the server you should define a class with name sfVkontaktePhoto and this clas
 
 ## Todo
 
-1.	Add checker of if we need to fetch profile and friends - remove one time in day hardcode.
-2.	Rewrite getPhoto and all around it.
+1.	Rewrite getPhoto and all around it.
+2.	Move FriendReference model to the actAs behaviour.
+3.	Make post to wall work with a number of walls.
