@@ -133,15 +133,15 @@ Use Doctrine Collection $this->user->Friends - to get friends list of current us
 
 These fields automatically updating every 24 hours (it can be changed by redefine getNeedFetch of your myUser class).
 
-### Client side, App and Upload classes
+### Client side, vkApp classe
 
 Usual way to use these classes is to write to your main.js code like this:
 
 	$(function() {
-		App.create(callback);
+		app = new vkApp(callback);
 	});
 
-The first parameter of the App.create method is the function, that will be called after all initialization. For example, you can write this code in that function. Lets have this html code, whatever:
+The first parameter of constructor is the function, that will be called after all initialization. For example, you can write this code in that function. Lets have this html code, whatever:
 
 	<div id='content'></div>
 	<a id='post-photo' href='javascript:void(0);'>post_photo</a><br/>
@@ -150,34 +150,54 @@ The first parameter of the App.create method is the function, that will be calle
 Then the code will be:
 
 	var callback =  function (){
-		// test use of the api object, retrieve viewer_id
-		$('#content').append(App.User.first_name);
+		// test use of the api object, retrieve name and surname
+		$('#content').append(app.User.first_name + ' ' + app.User.last_name);
 
 		// add onclick event - send photo to album
 		$('#post-photo').click(function() {
-			Upload.photo('new album', 'getPhoto', {}, function(){});
+			app.upload_photo(function(){},
+			{
+				album_title: 'new album'
+			//	album_id: ##album id to post##
+			})
 		});
-		// add onclick event - send photo and message to the wall of user 11111
+
+		// add onclick event - send photo and message to the walls
 		$('#post-wall').click(function() {
-			Upload.wall ('test', 11111, 'getPhoto', {}, function(){});
+			app.post_walls(function(){},
+			{
+				message: 'test',
+				uids: [## wall ids for post##]
+			});
 		});
 	}
+The second parameter of constructor is options. Default options are:
 
-Also you can pass to the App.create method another two parameters:
+		mandatory_settings: Settings.FRIENDS | Settings.NOTIFY | Settings.PHOTOS,
+		unnessesary_settings: Settings.MENU,
+		install_element: 				'#sf_vkontakte_install',
+		mandatory_settings_element: 	'#sf_vkontakte_settings',
+		unnessesary_settings_element: 	'#sf_vkontakte_unnessesary_settings',
+		after_fetch_friends_done: function() {},
+		after_fetch_friends_not: function() {}
 
-*  after_fetch_friends_done - it will be called after fetching friends.
-*  after_fetch_friends_not - it will be called if it is not nessesary to fetch friends.
+You can override them by passing options hash to the constructor.
 
-Let's see on the Upload class. It has two public methods:
+### Upload files to server - post to wall and upload photo to album
 
-*  Upload.photo(album_title, server_method, server_method_params, callback )
-*  Upload.wall(message, wall_id, server_method, server_method_params, callback )
+The app class has methods **upload_photo** and **post_walls**. They gets two parameters - callback and options. The options hash can content these items:
+ - for app.upload_photo method: album_title or album_id
+ - for app.post_walls method: message and uids
 
 On the server you should define a class with name sfVkontaktePhoto and this class must have a static method with name getPhoto, which returns a path to the file need to upload. This method should get one parameter - it passes from client - **server_method_params**. Yes, I know, it is the first candidate to fully redesign.
+
+You can override mane of the method and list of parameters by setting in options hash:
+		server_method: 'getWallImage',
+		server_method_params: {id: app.User.uid}
 
 ## Todo:
 
 1.	Rewrite getPhoto and all around it.
 2.	Move FriendReference model to the actAs behaviour.
-3.	Make post to wall work with a number of walls.
-4.	Rewrite common.js file to clear and proper view - I need help to do it, because I'm not a specialist in JS, actually.
+
+

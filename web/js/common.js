@@ -21,9 +21,8 @@ Settings = {
 	MENU      :  256, // add access to left menu
 	WALL      :  512, // add access to user wall
 	STATUS    : 1024, // add access to user status
-	check: function(current, needed) {
-		return (current & needed) == needed;
-	}
+
+	check: function(current, needed) {  return (current & needed) == needed; }
 };
 /**
  * 
@@ -243,6 +242,18 @@ function vkApp(callback /*, options*/) {
 		callbacks[name].splice(callback_id, 1, null);
 	};
 
+	this.upload_photo = function(callback, options) {
+		vkPhotoUploader(callback, extend_global({
+			server_method: 'getPhoto',
+			server_method_params: {}
+		}, options));
+	};
+	this.post_walls = function(callback, options) {
+		vkWallUploader(callback, extend_global({
+			server_method: 'getPhoto',
+			server_method_params: {}
+		}, options));
+	};
 	/**
 	 * Constructor
 	 *
@@ -263,18 +274,6 @@ function vkApp(callback /*, options*/) {
 			install();
 		}
 	});
-	this.upload_photo = function(callback, options) {
-		vkPhotoUploader(callback, extend_global({
-			server_method: 'getPhoto',
-			server_method_params: {}
-		}, options));
-	};
-	this.post_walls = function(callback, options) {
-		vkWallUploader(callback, extend_global({
-			server_method: 'getPhoto',
-			server_method_params: {}
-		}, options));
-	};
 };
 
 function vkPhotoUploader(callback, options) {
