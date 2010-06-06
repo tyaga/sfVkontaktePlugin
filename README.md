@@ -1,69 +1,83 @@
-# sfVkontaktePlugin plugin for symfony 1.3 and 1.4
+# sfVkontaktePlugin plugin to symfony 1.4
 
-This plugin is still in development. 
+**What does plugin do?**
+
+It strongly simplify development of [VKontakte](http://vk.com/) [applications](http://vk.com/pages.php?act=developers) on [Symfony Framework](http://www.symfony-project.org/).
+
+*VKontakte is the most popular social network service in CIS. It has around 75 million users.*
+
+Plugin gives you:
+1.  Php class for performing secure VKontarte api calls
+2.  JS library - wrapper for installing app, making proper settings, uploading photos to VK and post to walls.
+3.  Profile and friends retriever - it saves to your database profile of current user and list of his friends.
+
+This plugin is still in development, but the development concern generally on making it more adjustable.
+
+The test application for this plugin will be released soon.
 
 ##Requirements:
 
-*   Symfony 1.3 and more
-*   Doctrine 1.2
+*   [Symfony](http://www.symfony-project.org/) 1.3 and more. ORM should be Doctrine only.
+*   [jQuery](http://jquery.com) 1.4.2 (maybe older version, not tested)
 *   php-curl module to make VK Api POST requests
-*   jQuery 1.4.2 (maybe older version, not tested)
 
 ##Installation:
 
-1.  Fetch code , move downloaded source to your plugin directory and enable plugin in SF_ROOT/config/ProjectConfiguration.class.php:
+*  Use git submodule. Another way is to fetch code, move downloaded source to your plugin directory.
 
 		$ cp ~/sfVkontaktePlugin SF_ROOT/plugins
+
+Enable plugin in SF_ROOT/config/ProjectConfiguration.class.php:
 
 		// SF_ROOT/config/ProjectConfiguration.class.php
 		$this->enablePlugins('sfVkontaktePlugin');
 
-2.  Enable the sfVkontakteFetch module to fetch friends and upload photos to VK server. Add this line to your SF_ROOT/frontend/config/settings.yml file:
+*  Enable the sfVkontakteFetch module to fetch friends and upload photos to VK server. Add this line to your SF_ROOT/frontend/config/settings.yml file:
 
 		enabled_modules: [default, sfVkontakteFetch]
 
-3.  Change routing options in factories.yml to automatically add mandatory iframe parameters to every link on your site. Change parameter in your SF_ROOT/frontend/config/factories.yml. Or you can set the enable_append_get_params configuration to false. See Configuration chapter.
+*  Change routing options in factories.yml to automatically add mandatory iframe parameters to every link on your site. Change parameter in your SF_ROOT/frontend/config/factories.yml. Or you can set the enable_append_get_params configuration to false. See Configuration chapter.
 
 		all:
 		  routing:
 		    class: sfVkontaktePatternRouting
 
-4.  Change security settings of your application in SF_ROOT/frontend/config/security.yml
+*  Change security settings of your application in SF_ROOT/frontend/config/security.yml
 
 		default:
 		  is_secure: true
 
-5.  Download jQuery library and add link to it into view.yml of your application (or use another way to enable jQuery)
+*  Download jQuery library and add link to it into view.yml of your application (or use another way to enable jQuery)
 
 		javascripts:    [lib/jquery-1.4.2, main]
 
-6.  Change inheritance of the myUser class in SF_ROOT/frontend/lib/myUser.class.php
+*  Change inheritance of the myUser class in SF_ROOT/frontend/lib/myUser.class.php
 
 		class myUser extends sfVkontakteUser {
 
-7.  Change inheritance of your actions.class.php .
+*  Change inheritance of your actions.class.php .
 		class mainActions extends sfVkontakteActions {
 
-8.  Add js setter partial to application layout.php. Add it inside the &lt;head&gt; tag.
+*  Add js setter partial to application layout.php. Add it inside the &lt;head&gt; tag.
 
 		<? include_partial('sfVkontakteFetch/init_js_options')?>
 
-9.  If you want to use our installation and settings messages, add partial to application layout.php. Add it inside the &lt;body&gt; tag. Otherwise, see Client side chapter.
+*  If you want to use our installation and settings messages, add partial to application layout.php. Add it inside the &lt;body&gt; tag. Otherwise, see Client side chapter.
 
 		<? include_partial('sfVkontakteFetch/messages')?>
 
-10.  Put your VK App settings in settings.yml. Optionally add SF_ROOT/config/settings.yml to your VCS ignore. It allows you to have two instances of your VK App with different settings
+*  Put your VK App settings in settings.yml. Optionally add SF_ROOT/config/settings.yml to your VCS ignore. It allows you to have two instances of your VK App with different settings
 
 		$ cp SF_ROOT/plugins/sfVkontaktePlugin/config/settings-example.yml SF_ROOT/config/settings.yml
 		$ vi SF_ROOT/config/settings.yml
 
-11.  Setup the database and model. Add to your user model actAs **sfVkontakteApiUser** behaviour.
+*  Setup the database and model. Add to your user model actAs **sfVkontakteApiUser** behaviour.
 
 		// doctrine/schema.yml
 		User:
 		  actAs: [sfVkontakteApiUser]
 
-12.  Build and load your schema, or import sql manually. Then publish plugin assets.
+*  Build and load your schema, or import sql manually. Then publish plugin assets.
 
 		$ ./symfony doctrine:build --all --and-load
 		$./symfony plugin:publish:assets
@@ -162,7 +176,7 @@ Then the code will be:
 			app.upload_photo(function(){},
 			{
 				album_title: 'new album'
-			//	album_id: ##album id to post##
+			//	album_id: ##album id to post to ##
 			})
 		});
 
@@ -171,10 +185,11 @@ Then the code will be:
 			app.post_walls(function(){},
 			{
 				message: 'test',
-				uids: [## wall ids for post##]
+				uids: [## array of wall ids for post on ##]
 			});
 		});
 	}
+
 The second parameter of constructor is options. Default options are:
 
 1. mandatory_settings. Default value is: *Settings.FRIENDS | Settings.NOTIFY | Settings.PHOTOS*. This settings value are nessesary for application running. They are asking just after install application and every page load. If they are not setted, applicaion won't run.
@@ -208,5 +223,4 @@ You can override name of the method and list of parameters by setting in options
 4.  Always fetch current user profile, even if app_vkontakte_enable_fetch is false.
 5.  Audio and video upload wrappers.
 6.  Set profile photo wrapper.
-7.  Develop simple payment system.
-8.
+7.  Simple payment system.
