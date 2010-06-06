@@ -7,6 +7,7 @@ It strongly simplify development of [VKontakte](http://vk.com/) [applications](h
 *VKontakte is [the most popular social network service](http://en.wikipedia.org/wiki/Vkontakte) in [CIS](http://en.wikipedia.org/wiki/Commonwealth_of_Independent_States). It has around 75 million users.*
 
 Plugin gives you:
+
 1.  Php class for performing secure VKontarte api calls
 2.  JS library - wrapper for installing app, making proper settings, uploading photos to VK and post to walls.
 3.  Profile and friends retriever - it saves to your database profile of current user and list of his friends.
