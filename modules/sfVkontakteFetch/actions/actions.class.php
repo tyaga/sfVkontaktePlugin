@@ -20,15 +20,22 @@ class sfVkontakteFetchActions extends sfVkontakteActions {
 		return $this->returnJSON($result);
 	}
 	public function executeUploadPhoto(sfWebRequest $request) {
+		if (!function_exists('curl_init')) {
+			return $this->returnJSON(array('error'=> 'curl is not installed'));
+		}
+
 		$server = $request->getParameter('server');
-		$method = $request->getParameter('method');
+		$method = $request->getParameter('method', '');
 		$params = $request->getParameter('params', array());
+		$mode = $request->getParameter('mode');
+
+		$this->forward404Unless($server && $mode);
 
 		$filename = sfVkontaktePhoto::$method($params);
-		if ($request->getParameter('mode') == 'photo') {
+		if ($mode == 'photo') {
 			$paramname = 'file1';
 		}
-		elseif($request->getParameter('mode') == 'wall') {
+		elseif($mode == 'wall') {
 			$paramname = 'photo';
 		}
 
@@ -38,9 +45,21 @@ class sfVkontakteFetchActions extends sfVkontakteActions {
 		curl_setopt($ch, CURLOPT_URL, $server);
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, array($paramname => $filename));
-		$result = curl_exec ($ch);
+		$result = json_decode(curl_exec ($ch));
 		curl_close ($ch);
 		
-		return $this->returnJSON(json_decode($result));
+		$resultToReturn = array( 'response' => $result );
+
+		if ($mode == 'photo') {
+			if ($result->server == '' || $result->photos_list == '' || $result->aid == '' || $result->hash == '') {
+				$resultToReturn = array( 'error' => json_decode($result) );
+			}
+		}
+		elseif($mode == 'wall') {
+			if ($result->server == '' || $result->photo == '' || $result->hash == '') {
+				$resultToReturn = array( 'error' => json_decode($result) );
+			}
+		}
+		return $this->returnJSON($resultToReturn);
 	}
 }

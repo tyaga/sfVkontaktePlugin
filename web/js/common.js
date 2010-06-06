@@ -8,170 +8,137 @@
 DEBUG = true;
 
 /**
- * Settings constants
+ * Settings constants holder
  */
 Settings = {
-	NOTIFY	  :    1, //allow to send notifications
-	FRIENDS   :    2, //add access to friends
-	PHOTOS    :    4, //add access to photos
-	AUDIO     :    8, //add access to audio
-	OFFER     :   32, //add access to offers
-	QUESTIONS :   64, //add access to questions
-	WIKI      :  128, //add access to Wiki-pages
-	MENU      :  256, //add access to left menu
-	WALL      :  512, //add access to user wall
-	STATUS    : 1024  //add access to user status
+	NOTIFY	  :    1, // allow to send notifications
+	FRIENDS   :    2, // add access to friends
+	PHOTOS    :    4, // add access to photos
+	AUDIO     :    8, // add access to audio
+	OFFER     :   32, // add access to offers
+	QUESTIONS :   64, // add access to questions
+	WIKI      :  128, // add access to wiki-pages
+	MENU      :  256, // add access to left menu
+	WALL      :  512, // add access to user wall
+	STATUS    : 1024, // add access to user status
+	check: function(current, needed) {
+		return (current & needed) == needed;
+	}
 };
+/**
+ * 
+ * @param callback
+ * @param options
+ */
+function vkApp(callback /*, options*/) {
+	this.User = null;
 
-App = {
-	User: null,
-	need_fetch: false,
-	profile_fields: null,
+	function extend_global(_options, options) {
+		// vkontakte_options is global variable setted in _init.php component.
+		return $.extend(vkontakte_options, _options, options);
+	}
 
-	mandatory_settings: Settings.FRIENDS | Settings.NOTIFY | Settings.PHOTOS,
-	unnessesary_settings: Settings.MENU,
+	var options = extend_global({
+		mandatory_settings: Settings.FRIENDS | Settings.NOTIFY | Settings.PHOTOS,
+		unnessesary_settings: Settings.MENU,
+		install_element: 				'#sf_vkontakte_install',
+		mandatory_settings_element: 	'#sf_vkontakte_settings',
+		unnessesary_settings_element: 	'#sf_vkontakte_unnessesary_settings',
+		after_fetch_friends_done: function() {},
+		after_fetch_friends_not: function() {}
+	},(arguments.length = 2)?arguments[1]:{})
 
-	install_element: 				'#sf_vkontakte_install',
-	mandatory_settings_element: 	'#sf_vkontakte_settings',
-	unnessesary_settings_element: 	'#sf_vkontakte_unnessesary_settings',
-
-	after_create: null,
-	after_fetch_friends_done: function() {},
-	after_fetch_friends_not: function() {},
-
-	/**
-	 * It is the very begining.
-	 * All the running code should be inside the after_create callback
-	 *
-	 * @param after_create
-	 */
-	create: function(after_create /*, after_fetch_friends_done, after_fetch_friends_not */) {
-		log('create');
-
-		// save the callback
-		App.after_create = after_create;
-
-		// @todo: remove it because it can be set outside
-		if ((arguments.length >= 2) && (typeof arguments[1] == 'function')) {
-			App.after_fetch_friends_done = after_fetch_friends_done;
-		}
-		if ((arguments.length >= 3) && (typeof arguments[2] == 'function')) {
-			App.after_fetch_friends_not = after_fetch_friends_not;
-		}
-		// @endtodo
-
-		// initialize and call App.init
-		VK.init(function() {
-
-			// load url parameters into VK.params
-			VK.loadParams(document.location.href);
-
-			// run or install the app
-			if (VK.params.is_app_user != 0) {
-				App.run();
-			}
-			else {
-				App.install();
-			}
-		});
-	},
+	var this_proxy = this;
 	/**
 	 * Calls check settings and fetch profiles methods,
 	 * after all - call passed after_create callback
 	 */
-	run: function() {
+	function run() {
 		log('run');
-		App.check_settings(function() {
-			App.fetch_profile(function() {
+		check_settings(function() {
+			fetch_profile(function() {
 				log('Preload has done, do run App');
-				App.after_create();
+				callback();
 			});
 		});
-	},
+	};
 	/**
 	 * It checks settings, if it is OK - calls callback
 	 *
 	 * @param callback
 	 */
-	check_settings: function(callback) {
+	function check_settings(callback){
 		log('check settings');
 
 		// just show element, do not stop running
-		if (!Tools.check_settings(VK.params.api_settings, App.unnessesary_settings)) {
+		if (!Settings.check(VK.params.api_settings, options.unnessesary_settings)) {
 			log("Wrong unnessesary settings, show link");
-			$(App.unnessesary_settings_element).click(function() {
-				VK.callMethod('showSettingsBox',App.unnessesary_settings);
+			$(options.unnessesary_settings_element).click(function() {
+				VK.callMethod('showSettingsBox',options.unnessesary_settings);
 			}).show();
-			App.bind_and_do_if_settings_ok(App.unnessesary_settings, function() {
-				$(App.unnessesary_settings_element).hide();
+			bind_and_do_if_settings_ok(options.unnessesary_settings, function() {
+				$(options.unnessesary_settings_element).hide();
 			});
 		}
 		// show element and bind callback to changed settings
-		if (Tools.check_settings(VK.params.api_settings, App.mandatory_settings)) {
+		if (Settings.check(VK.params.api_settings, options.mandatory_settings)) {
 			log('Mandatory settings are OK, go forward');
 			callback();
 		}
 		else {
 			log("Wrong mandatory settings, can't run");
-			App.bind_and_do_if_settings_ok(App.mandatory_settings, function() {
-				// @todo: ??? callback();
-				App.run();
+			bind_and_do_if_settings_ok(options.mandatory_settings, function() {
+				// @todo: ???
+				//run();
+				callback();
 			});
-			App.make_settings(App.mandatory_settings);
+			make_settings(options.mandatory_settings);
 		}
-	},
+	};
+	/**
+	 * Bind onSettingsChanged callback and run callback if settings are OK
+	 * @param need_settings
+	 * @param callback
+	 */
+	function bind_and_do_if_settings_ok(need_settings, callback) {
+		this_proxy.addCallback('onSettingsChanged', function(current_settings) {
+			if (Settings.check(current_settings, need_settings)) {
+				log('Changed settings are OK, run callback');
+				callback();
+			}
+		});
+	};
 	/**
 	 * Ask user to set required settings
 	 * @param settings
 	 */
-	make_settings: function(settings) {
-		if (!Tools.check_settings(VK.params.api_settings, settings)) {
-			App.show_message(App.mandatory_settings_element, function(){ VK.callMethod("showSettingsBox", settings); });
+	function make_settings(settings) {
+		if (!Settings.check(VK.params.api_settings, settings)) {
+			show_message(options.mandatory_settings_element, function(){ VK.callMethod("showSettingsBox", settings); });
 			VK.callMethod("showSettingsBox", settings);
 		}
-		VK.addCallback('onSettingsChanged',function(new_settings) {
+		this_proxy.addCallback('onSettingsChanged',function(new_settings) {
 			VK.params.api_settings = new_settings;
-			if (Tools.check_settings(VK.params.api_settings, settings)) {
-				App.hide_message(App.mandatory_settings_element);
+			if (Settings.check(VK.params.api_settings, settings)) {
+				hide_message(options.mandatory_settings_element);
 			}
 		});
-	},
-	/**
-	 * Ask user to install Application
-	 * @param callback
-	 */
-	make_install: function(callback) {
-		if (VK.params.is_app_user == 0) {
-			App.show_message(App.install_element, function(){ VK.callMethod('showInstallBox'); });
-			VK.addCallback('onApplicationAdded', function() {
-				VK.params.is_app_user = 1;
-				App.hide_message(App.install_element);
-				callback();
-				VK.callMethod('showInstallBox');
-			});
-		}
-		else {
-			callback();
-		}
-	},
-	show_message: function(id, onclick){
-		$(id).show().click(onclick);
-	},
-	hide_message: function(id){
-		$(id).hide();
-	},
+	};
+
+	function show_message(id, onclick){ $(id).show().click(onclick); };
+	function hide_message(id){ $(id).hide(); };
 	/**
 	 * Gets friends, friends profiles and user profile
 	 * Assigns user profile to App.User
 	 * Saves all data to server
-	 * 
+	 *
 	 * @param callback
 	 */
-	fetch_profile: function(callback) {
+	function fetch_profile(callback) {
 		// if we need to fetch friends?
-		if (App.need_fetch) {
+		if (options.need_fetch) {
 			log('fetch profile and friends');
-			var fields_param = '"fields": "' + App.profile_fields + '"';
+			var fields_param = '"fields": "' + options.profile_fields + '"';
 			// Code in VKScript lang
 			var code =
 			'var friends = API.getFriends();' +
@@ -181,19 +148,19 @@ App = {
 
 			VK.api('execute', {'code': code}, function(data) {
 				data = data.response;
-				App.User = data.myProfile[0];
+				this_proxy.User = data.myProfile[0];
 				log("Friends and profiles fetched, tryng to send");
 
 				data.settings = VK.params.api_settings;
 				// save to server
-				$.post(App.fetch_url, data, function(result) {
+				$.post(options.fetch_url, data, function(result) {
 					if (result) {
 						log("Profiles sent, call callback done");
-						App.after_fetch_friends_done();
+						options.after_fetch_friends_done();
 					}
 					else {
 						log("Profiles sent, but hasn't saved, call callback not need to save");
-						App.after_fetch_friends_not();
+						options.after_fetch_friends_not();
 					}
 					callback();
 				})
@@ -203,227 +170,229 @@ App = {
 		else {
 			log('fetch profile');
 			// just retrieve current user profile
-			VK.api('getProfiles', { uids: VK.params.viewer_id, fields: App.profile_fields}, function(data){
-				App.User = data.response[0];
+			VK.api('getProfiles', { uids: VK.params.viewer_id, fields: options.profile_fields}, function(data){
+				this_proxy.User = data.response[0];
 				callback();
 			});
 		}
-
-	},
+	};
 	/**
 	 * Install application and ask user to make settings
 	 */
-	install: function() {
+	function install() {
 		log('install');
-		App.make_install(function() {
-			App.bind_and_do_if_settings_ok(App.mandatory_settings, function() {
-				App.run();
+		make_install(function() {
+			bind_and_do_if_settings_ok(options.mandatory_settings, function() {
+				run();
 			});
-			App.make_settings(App.mandatory_settings);
+			make_settings(options.mandatory_settings);
 		});
-	},
+	};
 	/**
-	 * Bind onSettingsChanged callback and run callback if settings are OK
-	 * @param need_settings
+	 * Ask user to install Application
 	 * @param callback
 	 */
-	bind_and_do_if_settings_ok: function(need_settings, callback) {
-		VK.addCallback('onSettingsChanged', function(current_settings) {
-			log('Settings changed');
-			if (Tools.check_settings(current_settings, need_settings)) {
-				log('Changed settings are OK, run callback');
+	function make_install(callback) {
+		if (VK.params.is_app_user == 0) {
+			show_message(options.install_element, function(){ VK.callMethod('showInstallBox'); });
+			this_proxy.addCallback('onApplicationAdded', function() {
+				VK.params.is_app_user = 1;
+				hide_message(options.install_element);
 				callback();
+				VK.callMethod('showInstallBox');
+			});
+		}
+		else {
+			callback();
+		}
+	};
+	/**
+	 * Queue of callbacks
+	 */
+	var callbacks = {};
+
+	/**
+	 * Add callback function.
+	 * @param name
+	 * @param callback
+	 * @return
+	 */
+	this.addCallback = function(name, callback) {
+		if (typeof callbacks[name] == 'undefined') {
+			callbacks[name] = new Array();
+		}
+		callbacks[name].push(callback);
+		VK.addCallback(name,
+			function() {
+				for (var c in callbacks[name]) {
+					if (callbacks[name][c] != null) {
+						callbacks[name][c].apply(null, arguments);
+					}
+				}
 			}
-		});
-	}
+		);
+		return callbacks[name].length - 1;
+	};
+
+	/**
+	 * Remove callback
+	 * @param name
+	 * @param callback_id
+	 */
+	this.removeCallback = function(name, callback_id) {
+		callbacks[name].splice(callback_id, 1, null);
+	};
+
+	/**
+	 * Constructor
+	 *
+	 * All the running code should be inside the create callback
+	 *
+	 */
+	log('create app');
+	VK.init(function() {
+
+		// load url parameters into VK.params
+		VK.loadParams(document.location.href);
+
+		// run or install the app
+		if (VK.params.is_app_user != 0) {
+			run();
+		}
+		else {
+			install();
+		}
+	});
+	this.upload_photo = function(callback, options) {
+		vkPhotoUploader(callback, extend_global({
+			server_method: 'getPhoto',
+			server_method_params: {}
+		}, options));
+	};
+	this.post_walls = function(callback, options) {
+		vkWallUploader(callback, extend_global({
+			server_method: 'getPhoto',
+			server_method_params: {}
+		}, options));
+	};
 };
-/**
- * Upload class
- *
- * Use it to upload photo to VK and
- * to post message to Wall
- *
- */
-Upload = {
-	upload_server: null,
-	album_id: null,
-	upload_result: null,
-	mode: null,
-	album_title: null,
-	wall_id: null,
-	server_method: null,
-	upload_file_params: null,
 
-	/**
-	 * Uploads photo to the album with passed title
-	 *
-	 * @param album_title
-	 * @param server_method
-	 * @param upload_file_params
-	 * @param post_photo
-	 */
-	photo: function(album_title, server_method, upload_file_params, post_photo) { log('Upload.photo');
-		if (album_title != '' && server_method != '') {
-			Upload.album_title = album_title;
-			Upload.server_method = server_method;
-			Upload.upload_file_params = upload_file_params;
-		}
-		
-		Upload.mode = 'photo';
-		Upload.post(function(){
-			post_photo();
-		});
-	},
-	/**
-	 * Posts message to the wall_id with photo
-	 *
-	 * @param message
-	 * @param wall_id
-	 * @param server_method
-	 * @param upload_file_params
-	 * @param post_post_wall
-	 */
-	wall: function(message, wall_id, server_method, upload_file_params, post_post_wall) { log('Upload.wall');
-		Upload.server_method = server_method;
-		Upload.upload_file_params = upload_file_params;
-
-		Upload.message = message;
-		Upload.wall_id = wall_id;
-		
-		Upload.mode = 'wall';
-		Upload.post(function(){
-			Upload.post_wall(function(){
-				post_post_wall();
-			});
-		});
-	},
-
-	post: function(post_post) { log('Upload.post');
-		var upload_chain = function() {
-			Upload.get_server(function(){
-				Upload.upload_photo(function(){
-					Upload.save_photo(function(){
-						post_post();
-					});
-				});
-			});
-		};
-
-		switch(Upload.mode) {
-			case 'wall':
-				upload_chain();
-				break;
-			case 'photo':
-				Upload.find_album(function() {
-					upload_chain();
-				});
-				break;
-		}
-	},
-	find_album: function(after_find_album) { log('Upload.find_album');
-		VK.api( 'photos.getAlbums' , {}, function(data) {
-			if (data.response) {
+function vkPhotoUploader(callback, options) {
+	function find_album(callback) {
+		if (typeof options.album_id == 'undefined' && typeof options.album_title != 'undefined') {
+			VK.api( 'photos.getAlbums' , {}, function(data) {if (data.response) {
 				log('Try to recognize an album');
-				Upload.album_id = false;
+				var album_id = false;
 				for(var t in data.response) {
-					if (data.response[t]['title'] == Upload.album_title) {
-						Upload.album_id = data.response[t]['aid'];
+					if (data.response[t]['title'] == options.album_title) {
+						album_id = data.response[t]['aid'];
 						break;
 					}
 				}
-				if (!Upload.album_id) {
+				if (!album_id) {
 					log('Cant find an album, try to create album');
-					VK.api( 'photos.createAlbum', {'title': Upload.album_title}, function(data) {
+					VK.api( 'photos.createAlbum', {'title': options.album_title}, function(data) {
 						log('Album created');
-						Upload.album_id = data.response['aid'];
-						after_find_album();
+
+						callback(data.response['aid']);
 					});
 				}
 				else {
-					log('Album finded ' + Upload.album_id);
-					after_find_album();
+					log('Album finded ' + album_id);
+					callback(album_id);
+				}}
+				else {
+					log('Error while fetching albums');
 				}
-			}
-			else {
-				log('Error while fetching albums');
-			}
-		});
-	},
-	get_server: function(after_get_server) { log('Upload.get_server');
-		switch(Upload.mode) {
-			case 'wall': var method = 'wall.getPhotoUploadServer'; var params = {}; break;
-			case 'photo': var method = 'photos.getUploadServer'; var params = {'aid': Upload.album_id}; break;
+			});
 		}
-		VK.api(method, params, function(data) {
-			if (data.response) {
-				log("Server fetched");
-				Upload.upload_server = data.response.upload_url;
-				after_get_server();
-			}
-			else {
-				log("Error while fetching server");
-			}
-		});
-	},
-	upload_photo: function(after_upload_photo) { log('Upload.upload_photo');
-		$.post(App.upload_photo_url,
-		{	server: Upload.upload_server,
-			method: Upload.server_method,
-			params: Upload.upload_file_params,
-			mode: Upload.mode
-		},
-		function(data) {
-			log('Photo has uploaded to vk, callback');
-			Upload.upload_result = data;
-			after_upload_photo();
-		});
-	},
-	save_photo: function(after_save_photo) {  log('Upload.save_photo');
-		switch( Upload.mode ) {
-			case 'wall':
-				var method = 'wall.savePost';
-				var params = Upload.upload_result;
-				params.message = Upload.message;
-				params.wall_id = Upload.wall_id;
-				break;
-			case 'photo':
-				var method = 'photos.save';
-				var params = Upload.upload_result;
-				break;
+		else {
+			callback(options.album_id);
 		}
-
-		VK.api( method, params, function(data) {
-			if (data.response) {
-				log('Photo saved, do callback');
-
-				if (Upload.mode == 'wall') {
-					Upload.post_hash = data.response.post_hash;
+	};
+	function upload(album_id, callback) { log('get_server');
+		VK.api('photos.getUploadServer', {aid: album_id }, function(data) { if (data.response) {
+			log("Server fetched");
+			$.post(options.upload_photo_url,
+			{	server: data.response.upload_url,
+				method: options.server_method,
+				params: options.server_method_params,
+				mode: 'photo'
+			},
+			function(data) { if (data.response) {
+				log('Photo has uploaded to vk, save');
+				VK.api( 'photos.save', data.response, function(data) {if (data.response) {
+					log('Photo saved, do callback');
+					callback();
 				}
-
-				after_save_photo();
+				else {
+					log('Cant save photo');
+				}});
 			}
 			else {
-				log('Cant save photo');
-			}
+				log('Error occured while uploading photo:' + data.error);
+			}});
+		}
+		else {
+			log("Error while fetching server");
+		}});
+	};
+
+	find_album(function(album_id) {
+		upload(album_id, function(){
+			callback();
 		});
-	},
-	post_wall: function(after_post_wall) {  log('Upload.post_wall');
-		VK.addCallback('onWallPostSave', function() {
-			log('Post wall success, do callback');
-			after_post_wall();
-		});
-		VK.addCallback('onWallPostCancel', function() {
-			log('Post wall cancel');
-		});
-		VK.callMethod('saveWallPost', Upload.post_hash);
-	}
+	});
 };
+function vkWallUploader(callback, options) {
+	function upload(id, callback) {
+		VK.api('wall.getPhotoUploadServer', {wall_id: id}, function(data) {if (data.response) {
+			$.post(options.upload_photo_url, {
+				server: data.response.upload_url,
+				method: options.server_method,
+				params: options.server_method_params,
+				mode: 'wall'
+			}, function(data) { if (data.response){
+				data.response.wall_id = id;
+				data.response.message = options.message;
+				callback.apply(null, [data.response]);
+			}
+			else{
+				log('Error occured while uploading photo:' + data.error);
+			}});
+		}
+		else {
+			log('Error while fetching server');
+		}});
+	};
+	function save(data, callback){
+		VK.api( 'wall.savePost', data, function(data) {if (data.response){
+			app.addCallback('onWallPostSave', function() {
+				setTimeout(function() { callback.call() }, 1000);
+			});
+			app.addCallback('onWallPostCancel', function() {
+				setTimeout(function(){ callback.call() }, 1000);
+			});
+			VK.callMethod('saveWallPost', data.response.post_hash);
+		}else{
+			log('Cant post wall');
+		}});
+	};
 
+	var queue = new CallQueue();
+	for (var uid in options.uids) {
+		queue.enqueue(function(wall_id) {
+			upload(wall_id, function(data){
+				save(data, function() {
+					queue.callnext();
+				})
+			});
+		}, [options.uids[uid]]);
+	}
+	queue.callnext();
+};
 Tools = {
 	timer: new Date().getTime(),
-	check_settings: function(current_settings, need_settings) {
-		return (current_settings & need_settings) == need_settings;
-	},
 	log: function (msg) {
 		var elapsed = (new Date().getTime() - Tools.timer);
 		var date = new Date(elapsed);
@@ -437,5 +406,17 @@ Tools = {
 			}
 		}
 	}
+};
+function CallQueue() {
+	var queue = [];
+	this.enqueue = function(func, params, context) {
+		queue.push([func, context, params]);
+	};
+	this.callnext = function() {
+		if (queue.length > 0) {
+			var data = queue.shift();
+			data[0].apply(data[1], data[2]);
+		}
+	};
 };
 log = Tools.log;

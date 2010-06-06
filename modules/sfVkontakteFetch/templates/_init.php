@@ -1,10 +1,15 @@
 <? if (!is_null($sf_user->id) && $sf_user->id): ?>
 
 <script type="text/javascript" language="javascript">
-	App.profile_fields = '<?=implode(',', array_keys(sfConfig::get('app_vkontakte_profile_fields')))?>';
-	App.fetch_url = '<?=url_for('@sf_vkontakte_fetch_profiles'); ?>';
-	App.upload_photo_url = '<?=url_for('@sf_vkontakte_upload_photo'); ?>';
-	App.need_fetch = <?=$sf_user->need_fetch?'true':'false'?>;
+var vkontakte_options = {
+
+	profile_fields: '<?=implode(',', array_keys(sfConfig::get('app_vkontakte_profile_fields')))?>',
+
+	fetch_url: '<?=url_for('@sf_vkontakte_fetch_profiles'); ?>',
+	upload_photo_url: '<?=url_for('@sf_vkontakte_upload_photo'); ?>',
+
+	need_fetch: <?=$sf_user->need_fetch?'true':'false'?>
+}
 </script>
 
 <div id='sf_vkontakte_install' style='display:none;'>Please install Application!</div>
