@@ -33,7 +33,7 @@ function vkApp(callback /*, options*/) {
 	this.User = null;
 
 	function extend_global(_options, options) {
-		// vkontakte_options is global variable setted in _init.php component.
+		// vkontakte_options is global variable setted in _init_js_options.php component.
 		return $.extend(vkontakte_options, _options, options);
 	}
 
@@ -87,8 +87,6 @@ function vkApp(callback /*, options*/) {
 		else {
 			log("Wrong mandatory settings, can't run");
 			bind_and_do_if_settings_ok(options.mandatory_settings, function() {
-				// @todo: ???
-				//run();
 				callback();
 			});
 			make_settings(options.mandatory_settings);
@@ -206,38 +204,23 @@ function vkApp(callback /*, options*/) {
 		}
 	};
 	/**
-	 * Queue of callbacks
+	 * work around queue of callbacks
 	 */
 	var callbacks = {};
-
-	/**
-	 * Add callback function.
-	 * @param name
-	 * @param callback
-	 * @return
-	 */
 	this.addCallback = function(name, callback) {
 		if (typeof callbacks[name] == 'undefined') {
 			callbacks[name] = new Array();
 		}
 		callbacks[name].push(callback);
-		VK.addCallback(name,
-			function() {
-				for (var c in callbacks[name]) {
-					if (callbacks[name][c] != null) {
-						callbacks[name][c].apply(null, arguments);
-					}
+		VK.addCallback(name, function() {
+			for (var c in callbacks[name]) {
+				if (callbacks[name][c] != null) {
+					callbacks[name][c].apply(null, arguments);
 				}
 			}
-		);
+		});
 		return callbacks[name].length - 1;
 	};
-
-	/**
-	 * Remove callback
-	 * @param name
-	 * @param callback_id
-	 */
 	this.removeCallback = function(name, callback_id) {
 		callbacks[name].splice(callback_id, 1, null);
 	};

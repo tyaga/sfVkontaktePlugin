@@ -44,22 +44,26 @@ This plugin is still in development.
 7.  Change inheritance of your actions.class.php .
 		class mainActions extends sfVkontakteActions {
 
-8.  Add initialization component to application layout.php. Add it inside the &lt;body&gt; tag.
+8.  Add js setter partial to application layout.php. Add it inside the &lt;head&gt; tag.
 
-		<? include_component('sfVkontakteFetch', 'init')?>
+		<? include_partial('sfVkontakteFetch/init_js_options')?>
 
-9.  Put your VK App settings in settings.yml. Optionally add SF_ROOT/config/settings.yml to your VCS ignore. It allows you to have two instances of your VK App with different settings
+9.  If you want to use our installation and settings messages, add partial to application layout.php. Add it inside the &lt;body&gt; tag. Otherwise, see Client side chapter.
+
+		<? include_partial('sfVkontakteFetch/messages')?>
+
+10.  Put your VK App settings in settings.yml. Optionally add SF_ROOT/config/settings.yml to your VCS ignore. It allows you to have two instances of your VK App with different settings
 
 		$ cp SF_ROOT/plugins/sfVkontaktePlugin/config/settings-example.yml SF_ROOT/config/settings.yml
 		$ vi SF_ROOT/config/settings.yml
 
-10.  Setup the database and model. Add to your user model actAs **sfVkontakteApiUser** behaviour.
+11.  Setup the database and model. Add to your user model actAs **sfVkontakteApiUser** behaviour.
 
 		// doctrine/schema.yml
 		User:
 		  actAs: [sfVkontakteApiUser]
 
-11.  Build and load your schema, or import sql manually. Then publish plugin assets.
+12.  Build and load your schema, or import sql manually. Then publish plugin assets.
 
 		$ ./symfony doctrine:build --all --and-load
 		$./symfony plugin:publish:assets
@@ -133,7 +137,7 @@ Use Doctrine Collection $this->user->Friends - to get friends list of current us
 
 These fields automatically updating every 24 hours (it can be changed by redefine getNeedFetch of your myUser class).
 
-### Client side, vkApp classe
+### Client side, vkApp class
 
 Usual way to use these classes is to write to your main.js code like this:
 
@@ -173,15 +177,12 @@ Then the code will be:
 	}
 The second parameter of constructor is options. Default options are:
 
-		mandatory_settings: Settings.FRIENDS | Settings.NOTIFY | Settings.PHOTOS,
-		unnessesary_settings: Settings.MENU,
-		install_element: 				'#sf_vkontakte_install',
-		mandatory_settings_element: 	'#sf_vkontakte_settings',
-		unnessesary_settings_element: 	'#sf_vkontakte_unnessesary_settings',
-		after_fetch_friends_done: function() {},
-		after_fetch_friends_not: function() {}
+1. mandatory_settings. Default value is: *Settings.FRIENDS | Settings.NOTIFY | Settings.PHOTOS*. This settings value are nessesary for application running. They are asking just after install application and every page load. If they are not setted, applicaion won't run.
+2. unnessesary_settings: Default value is: *Settings.MENU*. If they are not setted, the message will appear.
+3. install_element, default value is: *'#sf_vkontakte_install'*     mandatory_settings_element, default value is: *'#sf_vkontakte_settings'*     unnessesary_settings_element, default value is: *'#sf_vkontakte_unnessesary_settings'*     These selectors appear when application isn't installed or settings are not setted. If you will not redefine this values, you should use default values, it means that you have to include partial _messages to you layout.php. Otherwise, write your own html (div tags with mentioned ids) and css code.
+4. after_fetch_friends_done and after_fetch_friends_not are callbacks, that are called after fetching profiles and friends.
 
-You can override them by passing options hash to the constructor.
+You can override all options by setting them in second options hash.
 
 ### Upload files to server - post to wall and upload photo to album
 
