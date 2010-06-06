@@ -244,13 +244,13 @@ function vkApp(callback /*, options*/) {
 
 	this.upload_photo = function(callback, options) {
 		vkPhotoUploader(callback, extend_global({
-			server_method: 'getPhoto',
+			server_method: 'get',
 			server_method_params: {}
 		}, options));
 	};
 	this.post_walls = function(callback, options) {
 		vkWallUploader(callback, extend_global({
-			server_method: 'getPhoto',
+			server_method: 'get',
 			server_method_params: {}
 		}, options));
 	};

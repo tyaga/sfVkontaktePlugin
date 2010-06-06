@@ -79,14 +79,14 @@ Other configuration is in the app.yml file:
 	      append_get_params: true
 
 	    user_model: User
-	    upload_path: /web/sfVkontaktePlugin/images/uploads/
+	    photo_getter_class: vkPhotoGetter
 
 1.	enable_fetch - do or not save user profile, user friends and profiles of user friends to the database.
 2.	enable_register_routes - do or not automatically add fetch and upload photo routes to the routing collection. If it is setted to false, you should write these routing rules in your routing.yml file.
 3.	enable_add_js - do or not add javascript files to the response. If it is setted to false, you should add required JS to your view.yml file or to js compressor paths. The required js are "http://vkontakte.ru/js/api/xd_connection.js?2" and "/sfVkontaktePlugin/js/common.js".
 4.	enable_append_get_params - do or not append to every uri of every link on your site the get params, which passed from iframe. If it is setted to false, you must manage security of your app by yourself.
 5.	user_model - the name of the user model, obviously. Default value is **User**.
-6.	upload_path - path to uploaded images for save photo and post to wall.
+6.	photo_getter_class - class used for retrieve path to the file needed to upload to vk server 
 
 Condition of fetching friends and profiles is defined in sfVkontakteUser, in the getNeedFetch method, so you can write own method in your myUser class to redefine this behaviour. 
 
@@ -189,9 +189,9 @@ The app class has methods **upload_photo** and **post_walls**. They gets two par
  - for app.upload_photo method: album_title or album_id
  - for app.post_walls method: message and uids
 
-On the server you should define a class with name sfVkontaktePhoto and this class must have a static method with name getPhoto, which returns a path to the file need to upload. This method should get one parameter - it passes from client - **server_method_params**. Yes, I know, it is the first candidate to fully redesign.
+On the server you should define class, then write name of this class to your app.yml. This class must have static method **get**, which returns a path to the file need to upload with @ in the begining. See example tools/sfVkontaktePhotoGetter.class.php. This method should get one parameter - it passes from client - **server_method_params**.
 
-You can override mane of the method and list of parameters by setting in options hash:
+You can override name of the method and list of parameters by setting in options hash:
 		server_method: 'getWallImage',
 		server_method_params: {id: app.User.uid}
 

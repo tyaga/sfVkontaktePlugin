@@ -31,7 +31,8 @@ class sfVkontakteFetchActions extends sfVkontakteActions {
 
 		$this->forward404Unless($server && $mode);
 
-		$filename = sfVkontaktePhoto::$method($params);
+		$filename = call_user_func(array(sfConfig::get('app_vkontakte_photo_getter_class'), $method), $params);
+
 		if ($mode == 'photo') {
 			$paramname = 'file1';
 		}
@@ -45,9 +46,15 @@ class sfVkontakteFetchActions extends sfVkontakteActions {
 		curl_setopt($ch, CURLOPT_URL, $server);
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, array($paramname => $filename));
-		$result = json_decode(curl_exec ($ch));
+		$result = curl_exec($ch);
+		$error = curl_error($ch);
 		curl_close ($ch);
-		
+
+		if (!$result) {
+			return $this->returnJSON(array('error'=> 'Curl error: ' . $error));
+		}
+
+		$result = json_decode($result);
 		$resultToReturn = array( 'response' => $result );
 
 		if ($mode == 'photo') {

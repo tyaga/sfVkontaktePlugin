@@ -7,7 +7,7 @@ all:
     enable_append_get_params: true
 
     user_model: User
-    upload_path: /web/sfVkontaktePlugin/images/uploads/
+    photo_getter_class: vkPhotoGetter
 
 ## There is no need to edit this config below
     api_url: http://api.vkontakte.ru/api.php
