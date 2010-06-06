@@ -206,23 +206,23 @@ function vkApp(callback /*, options*/) {
 	/**
 	 * work around queue of callbacks
 	 */
-	var callbacks = {};
+	var callbackQueue = {};
 	this.addCallback = function(name, callback) {
-		if (typeof callbacks[name] == 'undefined') {
-			callbacks[name] = new Array();
+		if (typeof callbackQueue[name] == 'undefined') {
+			callbackQueue[name] = new Array();
 		}
-		callbacks[name].push(callback);
+		callbackQueue[name].push(callback);
 		VK.addCallback(name, function() {
-			for (var c in callbacks[name]) {
-				if (callbacks[name][c] != null) {
-					callbacks[name][c].apply(null, arguments);
+			for (var c in callbackQueue[name]) {
+				if (callbackQueue[name][c] != null) {
+					callbackQueue[name][c].apply(null, arguments);
 				}
 			}
 		});
-		return callbacks[name].length - 1;
+		return callbackQueue[name].length - 1;
 	};
 	this.removeCallback = function(name, callback_id) {
-		callbacks[name].splice(callback_id, 1, null);
+		callbackQueue[name].splice(callback_id, 1, null);
 	};
 
 	this.upload_photo = function(callback, options) {
@@ -349,10 +349,10 @@ function vkWallUploader(callback, options) {
 	};
 	function save(data, callback){
 		VK.api( 'wall.savePost', data, function(data) {if (data.response){
-			app.addCallback('onWallPostSave', function() {
+			VK.addCallback('onWallPostSave', function() {
 				setTimeout(function() { callback.call() }, 1000);
 			});
-			app.addCallback('onWallPostCancel', function() {
+			VK.addCallback('onWallPostCancel', function() {
 				setTimeout(function(){ callback.call() }, 1000);
 			});
 			VK.callMethod('saveWallPost', data.response.post_hash);

@@ -183,7 +183,7 @@ The second parameter of constructor is options. Default options are:
 3. install_element, default value is: *'#sf_vkontakte_install'*,    
 mandatory_settings_element, default value is: *'#sf_vkontakte_settings'*,    
 unnessesary_settings_element, default value is: *'#sf_vkontakte_unnessesary_settings'*,    
-These selectors appear when application isn't installed or settings are not setted. If you will not redefine this values, you should use default values, it means that you have to include partial _messages to you layout.php. Otherwise, write your own html (div tags with mentioned ids) and css code.
+These selectors appear on your page when application isn't installed or settings are not setted. If you will not redefine this values, you should use default values, it means that you have to include partial _messages to you layout.php. Otherwise, write your own html (div tags with mentioned ids) and css code.
 4. after_fetch_friends_done and after_fetch_friends_not are callbacks, that are called after fetching profiles and friends.
 
 You can override all options by setting them in second options hash.
@@ -202,7 +202,11 @@ You can override name of the method and list of parameters by setting in options
 
 ## Todo:
 
-1.	Rewrite getPhoto and all around it.
-2.	Move FriendReference model to the actAs behaviour.
-
-
+1.	Move FriendReference model to the actAs behaviour.
+2.  Remove dependency on jQuery.
+3.  Add loader to ajax requests.
+4.  Always fetch current user profile, even if app_vkontakte_enable_fetch is false.
+5.  Audio and video upload wrappers.
+6.  Set profile photo wrapper.
+7.  Develop simple payment system.
+8.
