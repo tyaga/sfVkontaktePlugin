@@ -4,7 +4,7 @@
 
 It strongly simplify development of [VKontakte](http://vk.com/) [applications](http://vk.com/pages.php?act=developers) on [Symfony Framework](http://www.symfony-project.org/).
 
-*VKontakte is the most popular social network service in CIS. It has around 75 million users.*
+*VKontakte is [the most popular social network service](http://en.wikipedia.org/wiki/Vkontakte) in [CIS](http://en.wikipedia.org/wiki/Commonwealth_of_Independent_States). It has around 75 million users.*
 
 Plugin gives you:
 1.  Php class for performing secure VKontarte api calls
