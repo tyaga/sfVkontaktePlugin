@@ -23,7 +23,7 @@ Settings = {
 	STATUS    : 1024, // add access to user status
 
 	check: function(current, needed) {
-		log(current + ' ' + needed);
+//		log(current + ' ' + needed);
 		return (current & needed) == needed;
 	}
 };
@@ -92,12 +92,11 @@ function vkApp(callback /*, options*/) {
 			else {
 				log("Wrong mandatory settings, can't run");
 				bind_and_do_if_settings_ok(options.mandatory_settings, function() {
+					hide_message(options.mandatory_settings_element);
 					callback();
 				});
 				show_message(options.mandatory_settings_element, function(){ VK.callMethod("showSettingsBox", options.mandatory_settings); });
 				VK.callMethod("showSettingsBox", options.mandatory_settings);
-
-				//make_settings(options.mandatory_settings);
 			}
 		}});
 
@@ -108,10 +107,11 @@ function vkApp(callback /*, options*/) {
 	 * @param callback
 	 */
 	function bind_and_do_if_settings_ok(need_settings, callback) {
-		this_proxy.addCallback('onSettingsChanged', function(current_settings) {
+		var callback_id = this_proxy.addCallback('onSettingsChanged', function(current_settings) {
 			VK.params.api_settings = current_settings;
 			if (Settings.check(current_settings, need_settings)) {
 				log('Changed settings are OK, run callback');
+				this_proxy.removeCallback('onSettingsChanged', callback_id);
 				callback();
 			}
 		});
@@ -125,10 +125,11 @@ function vkApp(callback /*, options*/) {
 			show_message(options.mandatory_settings_element, function(){ VK.callMethod("showSettingsBox", settings); });
 			VK.callMethod("showSettingsBox", settings);
 		}
-		this_proxy.addCallback('onSettingsChanged',function(new_settings) {
+		var callback_id = this_proxy.addCallback('onSettingsChanged',function(new_settings) {
 			VK.params.api_settings = new_settings;
 			if (Settings.check(VK.params.api_settings, settings)) {
 				hide_message(options.mandatory_settings_element);
+				this_proxy.removeCallback('onSettingsChanged', callback_id);
 			}
 		});
 	};
