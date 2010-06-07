@@ -2,49 +2,49 @@
 
 **What does plugin do?**
 
-It strongly simplifies development of [VKontakte](http://vk.com/) [applications](http://vk.com/pages.php?act=developers) on [Symfony Framework](http://www.symfony-project.org/).
+It was made to strongly simplify the development of [VKontakte](http://vk.com/) [applications](http://vk.com/pages.php?act=developers) on [Symfony Framework](http://www.symfony-project.org/).
 
 *VKontakte is [the most popular social network service](http://en.wikipedia.org/wiki/Vkontakte) in [CIS](http://en.wikipedia.org/wiki/Commonwealth_of_Independent_States). It has around 75 million users.*
 
 Plugin gives you:
 
-1.  Php class for performing secure VKontakte api calls
-2.  JS library - wrapper for installing app, making proper settings, uploading photos to VK and post to walls.
-3.  Profile and friends retriever - it saves to your database profile of current user and list of his friends.
+1.  Php class for performing secure VKontakte api calls;
+2.  JS library-wrapper for the installation of the application, for making proper settings, uploading photos to VKontakte albums and posting messages on  walls;
+3.  Profile and friends retriever, the tool to save profile of current user and list of his friends to your database.
 
-This plugin is still in development, but the development concerns generally on making it more adjustable.
+This plugin is still in development, but the development concerns only the adjustment of plugin features.
 
 The test application for this plugin will be released soon.
 
 ##Requirements:
 
-*   [Symfony](http://www.symfony-project.org/) 1.3 and more. ORM should be Doctrine only.
-*   [jQuery](http://jquery.com) 1.4.2 (maybe older version, not tested)
+*   [Symfony](http://www.symfony-project.org/) 1.3 and above. ORM must be Doctrine only.
+*   [jQuery](http://jquery.com) 1.4.2 (maybe previous versions)
 *   php-curl module to make VK Api POST requests
 
 ##Installation:
 
-*  Use git submodule to fetch code or just clone repository to your plugin directory. Then enable plugin in SF_ROOT/config/ProjectConfiguration.class.php:
+*  Use **git submodule** command to fetch code or just do **git clone** command into your plugin directory. Then enable plugin in SF_ROOT/config/ProjectConfiguration.class.php:
 
 		// SF_ROOT/config/ProjectConfiguration.class.php
 		$this->enablePlugins('sfVkontaktePlugin');
 
-*  Enable the sfVkontakteFetch module to fetch friends and upload photos to VK server. Add this line to your SF_ROOT/frontend/config/settings.yml file:
+*  Enable the sfVkontakteFetch module to allow plugin to fetch profiles and upload photos to VK server. Add this line to your SF_ROOT/frontend/config/settings.yml file:
 
 		enabled_modules: [default, sfVkontakteFetch]
 
-*  Change routing options in factories.yml to automatically add mandatory iframe parameters to every link on your site. Change parameter in your SF_ROOT/frontend/config/factories.yml. Or you can set the enable_append_get_params configuration to false. See Configuration chapter.
+*  Change routing options in factories.yml to automatically add mandatory iframe parameters to every link on your site. Change parameter in your SF_ROOT/frontend/config/factories.yml. If you don't want to add mentioned parameters, set the **enable_append_get_params** configuration to *false*. See the Configuration chapter.
 
 		all:
 		  routing:
 		    class: sfVkontaktePatternRouting
 
-*  Change security settings of your application in SF_ROOT/frontend/config/security.yml
+*  Change security settings of your frontend application in SF_ROOT/frontend/config/security.yml
 
 		default:
 		  is_secure: true
 
-*  Download jQuery library and add link to it into view.yml of your application (or use another way to enable jQuery)
+*  Download jQuery library and add link to it in view.yml (or use another way to enable jQuery)
 
 		javascripts:    [lib/jquery-1.4.2, main]
 
@@ -53,17 +53,18 @@ The test application for this plugin will be released soon.
 		class myUser extends sfVkontakteUser {
 
 *  Change inheritance of your actions.class.php .
+
 		class mainActions extends sfVkontakteActions {
 
 *  Add js setter partial to application layout.php. Add it inside the &lt;head&gt; tag.
 
 		<? include_partial('sfVkontakteFetch/init_js_options')?>
 
-*  If you want to use our installation and settings messages, add partial to application layout.php. Add it inside the &lt;body&gt; tag. Otherwise, see Client side chapter.
+*  If you want to use default installation and settings messages, include the **_messages** partial to the application layout.php file. Include it inside the &lt;body&gt; tag. Otherwise, define ids of **div** tags that contain your messages in second parameter **options** of the vkApp constructor. See Client side chapter.
 
 		<? include_partial('sfVkontakteFetch/messages')?>
 
-*  Put your VK App settings in settings.yml. Optionally add SF_ROOT/config/settings.yml to your VCS ignore. It allows you to have two instances of your VK App with different settings
+*  Copy settings-example.yml to your config directory. Put the settings of your application in settings.yml. You can copy these settings from "edit application" page on vk.com site. Optionally add SF_ROOT/config/settings.yml to your VCS ignore file. It allows you to have two instances of your application with different settings. For example, development and production instances.
 
 		$ cp SF_ROOT/plugins/sfVkontaktePlugin/config/settings-example.yml SF_ROOT/config/settings.yml
 		$ vi SF_ROOT/config/settings.yml
@@ -83,9 +84,9 @@ That's all, folks!
 
 ## Configuration:
 
-As stated before, you must copy config/settings-example.yml to your config directory and change application_id and secret_key values.
+As stated before, you have to copy **config/settings-example.yml** file to your config directory and change the **application_id** and **secret_key** values.
 
-Other configuration is in the app.yml file:
+Another configuration is in the app.yml file:
 
     	enable:
 	      fetch: true
@@ -96,14 +97,14 @@ Other configuration is in the app.yml file:
 	    user_model: User
 	    photo_getter_class: vkPhotoGetter
 
-1.	enable_fetch - do or not save user profile, user friends and profiles of user friends to the database.
-2.	enable_register_routes - do or not automatically add fetch and upload photo routes to the routing collection. If it is set to false, you should write these routing rules in your routing.yml file.
-3.	enable_add_js - do or not add javascript files to the response. If it is set to false, you should add required JS to your view.yml file or to js compressor paths. The required js are "http://vkontakte.ru/js/api/xd_connection.js?2" and "/sfVkontaktePlugin/js/common.js".
-4.	enable_append_get_params - do or not append to every uri of every link on your site the get params, which passed from iframe. If it is setted to false, you must manage security of your app by yourself.
-5.	user_model - the name of the user model, obviously. Default value is **User**.
-6.	photo_getter_class - class used for retrieve path to the file needed to upload to vk server 
+1.	**enable_fetch** - to save or not user profile, user friends and profiles of user friends to the database;
+2.	**enable_register_routes** - automatically add or not the *fetch* route and the *upload photo* route to the routing collection. If this option is set to false, you have to write these routing rules in your routing.yml file;
+3.	**enable_add_js** - add or not javascript files to the response. If it is set to false, you have to add required javascripts to your **view.yml** file or to js compressor paths. The required javascripts are **"http://vkontakte.ru/js/api/xd_connection.js?2"** and **"/sfVkontaktePlugin/js/common.js"**;
+4.	**enable_append_get_params** - append or not the GET params, which passed from iframe, to every uri on your site. If it is set to false, you have to manage security of your application by yourself;
+5.	**user_model** - the name of the doctrine user model, apparently. Default value is **User**;
+6.	**photo_getter_class** - class used for retrieve path to the file needed to upload to VK server. *************
 
-Condition of fetching friends and profiles is defined in sfVkontakteUser, in the getNeedFetch method, so you can write your own method in your myUser class to redefine this behaviour. 
+sfVkontakteUser class has the method **getNeedFetch**. This method returns the condition of fetch or not friends and profiles. So you can write your own method in your **myUser** class to redefine this behaviour.
 
 ## Documentation:
 
