@@ -22,7 +22,10 @@ Settings = {
 	WALL      :  512, // add access to user wall
 	STATUS    : 1024, // add access to user status
 
-	check: function(current, needed) {  return (current & needed) == needed; }
+	check: function(current, needed) {
+		log(current + ' ' + needed);
+		return (current & needed) == needed;
+	}
 };
 /**
  * 
@@ -68,29 +71,36 @@ function vkApp(callback /*, options*/) {
 	 */
 	function check_settings(callback){
 		log('check settings');
-
-		// just show element, do not stop running
-		if (!Settings.check(VK.params.api_settings, options.unnecessary_settings)) {
-			log("Wrong unnecessary settings, show link");
-			$(options.unnecessary_settings_element).click(function() {
-				VK.callMethod('showSettingsBox',options.unnecessary_settings);
-			}).show();
-			bind_and_do_if_settings_ok(options.unnecessary_settings, function() {
-				$(options.unnecessary_settings_element).hide();
-			});
-		}
-		// show element and bind callback to changed settings
-		if (Settings.check(VK.params.api_settings, options.mandatory_settings)) {
-			log('Mandatory settings are OK, go forward');
-			callback();
-		}
-		else {
-			log("Wrong mandatory settings, can't run");
-			bind_and_do_if_settings_ok(options.mandatory_settings, function() {
+		VK.api('getUserSettings', {}, function(data){if (!(typeof data.response == 'undefined')){
+			log('Settings fetched, check them');
+			VK.params.api_settings = data.response;
+			// just show element, do not stop running
+			if (!Settings.check(VK.params.api_settings, options.unnecessary_settings)) {
+				log("Wrong unnecessary settings, show link");
+				$(options.unnecessary_settings_element).click(function() {
+					VK.callMethod('showSettingsBox',options.unnecessary_settings);
+				}).show();
+				bind_and_do_if_settings_ok(options.unnecessary_settings, function() {
+					$(options.unnecessary_settings_element).hide();
+				});
+			}
+			// show element and bind callback to changed settings
+			if (Settings.check(VK.params.api_settings, options.mandatory_settings)) {
+				log('Mandatory settings are OK, go forward');
 				callback();
-			});
-			make_settings(options.mandatory_settings);
-		}
+			}
+			else {
+				log("Wrong mandatory settings, can't run");
+				bind_and_do_if_settings_ok(options.mandatory_settings, function() {
+					callback();
+				});
+				show_message(options.mandatory_settings_element, function(){ VK.callMethod("showSettingsBox", options.mandatory_settings); });
+				VK.callMethod("showSettingsBox", options.mandatory_settings);
+
+				//make_settings(options.mandatory_settings);
+			}
+		}});
+
 	};
 	/**
 	 * Bind onSettingsChanged callback and run callback if settings are OK
@@ -99,6 +109,7 @@ function vkApp(callback /*, options*/) {
 	 */
 	function bind_and_do_if_settings_ok(need_settings, callback) {
 		this_proxy.addCallback('onSettingsChanged', function(current_settings) {
+			VK.params.api_settings = current_settings;
 			if (Settings.check(current_settings, need_settings)) {
 				log('Changed settings are OK, run callback');
 				callback();
