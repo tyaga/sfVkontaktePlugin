@@ -46,6 +46,9 @@ class sfFetchHelper {
 
 		$changed = false;
 		foreach($friendIds as $userId) {
+			if (!isset($profiles_array[$userId])) {
+				continue;
+			}
 			// if there is no user, create one
 			$user = isset($users[$userId])?$users[$userId]:false;
 			if( !$user) {
