@@ -2,17 +2,17 @@
 
 **What does plugin do?**
 
-It strongly simplify development of [VKontakte](http://vk.com/) [applications](http://vk.com/pages.php?act=developers) on [Symfony Framework](http://www.symfony-project.org/).
+It strongly simplifies development of [VKontakte](http://vk.com/) [applications](http://vk.com/pages.php?act=developers) on [Symfony Framework](http://www.symfony-project.org/).
 
 *VKontakte is [the most popular social network service](http://en.wikipedia.org/wiki/Vkontakte) in [CIS](http://en.wikipedia.org/wiki/Commonwealth_of_Independent_States). It has around 75 million users.*
 
 Plugin gives you:
 
-1.  Php class for performing secure VKontarte api calls
+1.  Php class for performing secure VKontakte api calls
 2.  JS library - wrapper for installing app, making proper settings, uploading photos to VK and post to walls.
 3.  Profile and friends retriever - it saves to your database profile of current user and list of his friends.
 
-This plugin is still in development, but the development concern generally on making it more adjustable.
+This plugin is still in development, but the development concerns generally on making it more adjustable.
 
 The test application for this plugin will be released soon.
 
@@ -24,11 +24,7 @@ The test application for this plugin will be released soon.
 
 ##Installation:
 
-*  Use git submodule. Another way is to fetch code, move downloaded source to your plugin directory.
-
-		$ cp ~/sfVkontaktePlugin SF_ROOT/plugins
-
-Enable plugin in SF_ROOT/config/ProjectConfiguration.class.php:
+*  Use git submodule to fetch code or just clone repository to your plugin directory. Then enable plugin in SF_ROOT/config/ProjectConfiguration.class.php:
 
 		// SF_ROOT/config/ProjectConfiguration.class.php
 		$this->enablePlugins('sfVkontaktePlugin');
@@ -101,19 +97,19 @@ Other configuration is in the app.yml file:
 	    photo_getter_class: vkPhotoGetter
 
 1.	enable_fetch - do or not save user profile, user friends and profiles of user friends to the database.
-2.	enable_register_routes - do or not automatically add fetch and upload photo routes to the routing collection. If it is setted to false, you should write these routing rules in your routing.yml file.
-3.	enable_add_js - do or not add javascript files to the response. If it is setted to false, you should add required JS to your view.yml file or to js compressor paths. The required js are "http://vkontakte.ru/js/api/xd_connection.js?2" and "/sfVkontaktePlugin/js/common.js".
+2.	enable_register_routes - do or not automatically add fetch and upload photo routes to the routing collection. If it is set to false, you should write these routing rules in your routing.yml file.
+3.	enable_add_js - do or not add javascript files to the response. If it is set to false, you should add required JS to your view.yml file or to js compressor paths. The required js are "http://vkontakte.ru/js/api/xd_connection.js?2" and "/sfVkontaktePlugin/js/common.js".
 4.	enable_append_get_params - do or not append to every uri of every link on your site the get params, which passed from iframe. If it is setted to false, you must manage security of your app by yourself.
 5.	user_model - the name of the user model, obviously. Default value is **User**.
 6.	photo_getter_class - class used for retrieve path to the file needed to upload to vk server 
 
-Condition of fetching friends and profiles is defined in sfVkontakteUser, in the getNeedFetch method, so you can write own method in your myUser class to redefine this behaviour. 
+Condition of fetching friends and profiles is defined in sfVkontakteUser, in the getNeedFetch method, so you can write your own method in your myUser class to redefine this behaviour. 
 
 ## Documentation:
 
 ### Server side, sfVkontakteTools class
 
-sfVkontaktePlugin provides you sfVkontakteTools class, that allows you to call secure VK Api function.
+sfVkontaktePlugin provides you with sfVkontakteTools class, that allows you to call secure VK Api function.
 In PLUGIN/config/app.yml you can see all secure methods provided by VK with theirs parameters. In any part of your project you can write:
 
 		$this->getUser()->getBalance( array('uid' => $this->getUser()->id) );
@@ -123,7 +119,7 @@ or
 
 , where getBalance is the name of the method, and it calls with array of proper parameters.
 
-If you need to call for example the *sendNotification* method, you would like to pass utf8 string (in russian) in the *message* parameter. Plugin will handle it and automaticaly make proper signature to the call.
+If you need to call for example the *sendNotification* method, you would like to pass utf8 string (in Russian) in the *message* parameter. Plugin will handle it and automatically make proper signature to the call.
 
 Another example:
 		// in some action
@@ -131,8 +127,8 @@ Another example:
 
 ### Links, routing, and security
 
-I let VKontakte to check authority of user. Vkontakte make it by checking GET parameters passed to the iframe. It means that we should pass to every link on our site these parameters. I choose the routing way to do it.
-Generally, it means that you should write every link code on the site by link_to or url_for functions. Also, all your applications that accessible from VK Iframe must be secured.
+I let VKontakte to check authority of user. Vkontakte makes it by checking GET parameters passed to the iframe. It means that we should pass these parameters to every link on our site. I choose the routing way to do it.
+Generally, it means that you should write every link code on the site by link_to or url_for functions. Another requirement is that all your accessible from VK Iframe applications must be secured (is_secure: true in security.yml).
 
 ### User
 
@@ -150,7 +146,7 @@ Model User has a number of fields. First, it has all the fields defined in plugi
 
 Use Doctrine Collection $this->user->Friends - to get friends list of current user.
 
-These fields automatically updating every 24 hours (it can be changed by redefine getNeedFetch of your myUser class).
+These fields are automatically updating every 24 hours (it can be changed by redefine getNeedFetch of your myUser class).
 
 ### Client side, vkApp class
 
@@ -160,7 +156,7 @@ Usual way to use these classes is to write to your main.js code like this:
 		app = new vkApp(callback);
 	});
 
-The first parameter of constructor is the function, that will be called after all initialization. For example, you can write this code in that function. Lets have this html code, whatever:
+The first parameter of constructor is the function, that will be called after all initialization. For example, you can write this code in that function. Let's have this html code, whatever:
 
 	<div id='content'></div>
 	<a id='post-photo' href='javascript:void(0);'>post_photo</a><br/>
@@ -193,30 +189,30 @@ Then the code will be:
 
 The second parameter of constructor is options. Default options are:
 
-1. mandatory_settings. Default value is: *Settings.FRIENDS | Settings.NOTIFY | Settings.PHOTOS*. This settings value are nessesary for application running. They are asking just after install application and every page load. If they are not setted, applicaion won't run.
-2. unnessesary_settings: Default value is: *Settings.MENU*. If they are not setted, the message will appear.
-
+1. mandatory_settings. Default value is: *Settings.FRIENDS | Settings.NOTIFY | Settings.PHOTOS*. These settings value are necessary for application running.
+Application asks these settings from user just after install and every page load. If they are not set, applicaion won't run.
+2. unnecessary_settings: Default value is: *Settings.MENU*. If they are not set, the message will appear.
 3. install_element, default value is: *'#sf_vkontakte_install'*,    
 mandatory_settings_element, default value is: *'#sf_vkontakte_settings'*,    
-unnessesary_settings_element, default value is: *'#sf_vkontakte_unnessesary_settings'*,    
-These selectors appear on your page when application isn't installed or settings are not setted. If you will not redefine this values, you should use default values, it means that you have to include partial _messages to you layout.php. Otherwise, write your own html (div tags with mentioned ids) and css code.
+unnecessary_settings_element, default value is: *'#sf_vkontakte_unnecessary_settings'*,    
+These selectors appear on your page when application isn't installed or settings are not set. If you will not redefine these values, you should use default values, it means that you have to include partial _messages to you layout.php. Otherwise, write your own html (div tags with mentioned ids) and css code.
 4. after_fetch_friends_done and after_fetch_friends_not are callbacks, that are called after fetching profiles and friends.
 
 You can override all options by setting them in second options hash.
 
 ### Upload files to server - post to wall and upload photo to album
 
-The app class has methods **upload_photo** and **post_walls**. They gets two parameters - callback and options. The options hash can content these items:
+The app class has methods **upload_photo** and **post_walls**. They gets two parameters - callback and options. The options hash can contain these items:
  - for app.upload_photo method: album_title or album_id
  - for app.post_walls method: message and uids
 
-On the server you should define class, then write name of this class to your app.yml. This class must have static method **get**, which returns a path to the file need to upload with @ in the begining. See example tools/sfVkontaktePhotoGetter.class.php. This method should get one parameter - it passes from client - **server_method_params**.
+On the server you should define class, for example myPhotoUploader. Then write name of this class to your app.yml. This class must have static method **get**, which returns a path to the file need to upload with @ in the begining. See example tools/sfVkontaktePhotoGetter.class.php. This method should get one parameter - it passes from client - **server_method_params**.
 
 You can override name of the method and list of parameters by setting in options hash:
 		server_method: 'getWallImage',
 		server_method_params: {id: app.User.uid}
 
-## Todo:
+## To do:
 
 1.	Move FriendReference model to the actAs behaviour.
 2.  Remove dependency on jQuery.

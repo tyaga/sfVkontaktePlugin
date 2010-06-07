@@ -39,10 +39,10 @@ function vkApp(callback /*, options*/) {
 
 	var options = extend_global({
 		mandatory_settings: Settings.FRIENDS | Settings.NOTIFY | Settings.PHOTOS,
-		unnessesary_settings: Settings.MENU,
+		unnecessary_settings: Settings.MENU,
 		install_element: 				'#sf_vkontakte_install',
 		mandatory_settings_element: 	'#sf_vkontakte_settings',
-		unnessesary_settings_element: 	'#sf_vkontakte_unnessesary_settings',
+		unnecessary_settings_element: 	'#sf_vkontakte_unnecessary_settings',
 		after_fetch_friends_done: function() {},
 		after_fetch_friends_not: function() {}
 	},(arguments.length = 2)?arguments[1]:{})
@@ -70,13 +70,13 @@ function vkApp(callback /*, options*/) {
 		log('check settings');
 
 		// just show element, do not stop running
-		if (!Settings.check(VK.params.api_settings, options.unnessesary_settings)) {
-			log("Wrong unnessesary settings, show link");
-			$(options.unnessesary_settings_element).click(function() {
-				VK.callMethod('showSettingsBox',options.unnessesary_settings);
+		if (!Settings.check(VK.params.api_settings, options.unnecessary_settings)) {
+			log("Wrong unnecessary settings, show link");
+			$(options.unnecessary_settings_element).click(function() {
+				VK.callMethod('showSettingsBox',options.unnecessary_settings);
 			}).show();
-			bind_and_do_if_settings_ok(options.unnessesary_settings, function() {
-				$(options.unnessesary_settings_element).hide();
+			bind_and_do_if_settings_ok(options.unnecessary_settings, function() {
+				$(options.unnecessary_settings_element).hide();
 			});
 		}
 		// show element and bind callback to changed settings

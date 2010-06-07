@@ -82,7 +82,7 @@ class sfVkontakteTools {
 		foreach ($params as $k => $param) {
 			$output[] = $k . '=' . $param;
 		}
-		// implode (with '&' if nessesary)
+		// implode (with '&' if necessary)
 		return implode($delimeter, $output);
 	}
 
