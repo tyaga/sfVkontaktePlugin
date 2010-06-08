@@ -78,7 +78,7 @@ The test application for this plugin will be released soon.
 *  Build and load your schema, or import sql manually. Then publish plugin assets.
 
 		$ ./symfony doctrine:build --all --and-load
-		$./symfony plugin:publish:assets
+		$./symfony plugin:publish-assets
 
 That's all, folks!
 
