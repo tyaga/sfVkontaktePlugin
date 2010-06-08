@@ -23,7 +23,6 @@ Settings = {
 	STATUS    : 1024, // add access to user status
 
 	check: function(current, needed) {
-//		log(current + ' ' + needed);
 		return (current & needed) == needed;
 	}
 };
