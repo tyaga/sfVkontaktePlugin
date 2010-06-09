@@ -372,17 +372,23 @@ function vkWallUploader(callback, options) {
 		}});
 	};
 
-	var queue = new CallQueue();
+	var queue = [];
 	for (var uid in options.uids) {
-		queue.enqueue(function(wall_id) {
+		queue.push([function(wall_id) {
 			upload(wall_id, function(data){
 				save(data, function() {
-					queue.callnext();
+					if (queue.length > 0) {
+						var data = queue.shift();
+						data[0].apply(data[1], data[2]);
+					}
 				})
 			});
-		}, [options.uids[uid]]);
+		}, null, [options.uids[uid]]]);
 	}
-	queue.callnext();
+	if (queue.length > 0) {
+		var data = queue.shift();
+		data[0].apply(data[1], data[2]);
+	}
 };
 Tools = {
 	timer: new Date().getTime(),
@@ -399,17 +405,5 @@ Tools = {
 			}
 		}
 	}
-};
-function CallQueue() {
-	var queue = [];
-	this.enqueue = function(func, params, context) {
-		queue.push([func, context, params]);
-	};
-	this.callnext = function() {
-		if (queue.length > 0) {
-			var data = queue.shift();
-			data[0].apply(data[1], data[2]);
-		}
-	};
 };
 log = Tools.log;
