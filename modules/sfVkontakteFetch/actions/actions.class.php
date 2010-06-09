@@ -11,7 +11,7 @@ class sfVkontakteFetchActions extends sfVkontakteActions {
 	public function executeProfiles(sfWebRequest $request) {
 		$result = false;
 		if ($this->getUser()->need_fetch) {
-			$result = sfFetchHelper::setFetchedFriends( $this->user,
+			$result = sfFetchHelper::setFetchedFriends( $this->vkontakteUser,
 				$request->getParameter('friendsProfiles', array()),
 				$request->getParameter('myProfile', array()),
 				$request->getParameter('settings', null)

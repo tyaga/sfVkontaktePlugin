@@ -6,10 +6,9 @@ all:
     enable_add_js: true
     enable_append_get_params: true
 
-    user_model: User
     photo_getter_class: vkPhotoGetter
 
-## There is no need to edit this config below
+## There is no need to use this config below
     api_url: http://api.vkontakte.ru/api.php
     url: http://vkontakte.ru/
 

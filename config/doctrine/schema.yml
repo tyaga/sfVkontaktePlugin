@@ -1,4 +1,21 @@
-FriendReference:
+sfVkontakteUser:
+  options:
+    symfony:
+      form:   false
+      filter: false
+  actAs: [sfVkontakteApiUser, Timestampable]
+  columns:
+    settings: integer
+    fetched_at: datetime
+  relations:
+    Friends:
+      class: sfVkontakteUser
+      local: user_from
+      foreign: user_to
+      refClass: sfVkontakteFriendship
+      equal: true
+
+sfVkontakteFriendship:
   options:
     symfony:
       form:   false

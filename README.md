@@ -50,13 +50,13 @@ The test application for this plugin will be released soon.
 
 *  Change inheritance of the myUser class in SF_ROOT/frontend/lib/myUser.class.php
 
-		class myUser extends sfVkontakteUser {
+		class myUser extends sfVkontakteSecurityUser {
 
 *  Change inheritance of your actions.class.php .
 
 		class mainActions extends sfVkontakteActions {
 
-*  Add js setter partial to application layout.php. Add it inside the &lt;head&gt; tag.
+*  Add js setter partial to application layout.php. Add it inside the &lt;head&gt; tag and before including all other javascripts.
 
 		<? include_partial('sfVkontakteFetch/init_js_options')?>
 
@@ -68,12 +68,6 @@ The test application for this plugin will be released soon.
 
 		$ cp SF_ROOT/plugins/sfVkontaktePlugin/config/settings-example.yml SF_ROOT/config/settings.yml
 		$ vi SF_ROOT/config/settings.yml
-
-*  Setup the database and model. Add to your user model actAs **sfVkontakteApiUser** behaviour.
-
-		// doctrine/schema.yml
-		User:
-		  actAs: [sfVkontakteApiUser]
 
 *  Build and load your schema, or import sql manually. Then publish plugin assets.
 
@@ -88,23 +82,20 @@ As stated before, you have to copy **config/settings-example.yml** file to your 
 
 Another configuration is in the app.yml file:
 
-    	enable:
-	      fetch: true
-	      register_routes: true
-	      add_js: true
-	      append_get_params: true
+	    enable_fetch: true
+	    enable_register_routes: true
+	    enable_add_js: true
+	    enable_append_get_params: true
 
-	    user_model: User
 	    photo_getter_class: vkPhotoGetter
 
 1.	**enable_fetch** - to save or not user profile, user friends and profiles of user friends to the database;
 2.	**enable_register_routes** - automatically add or not the *fetch* route and the *upload photo* route to the routing collection. If this option is set to false, you have to write these routing rules in your routing.yml file;
 3.	**enable_add_js** - add or not javascript files to the response. If it is set to false, you have to add required javascripts to your **view.yml** file or to js compressor paths. The required javascripts are **"http://vkontakte.ru/js/api/xd_connection.js?2"** and **"/sfVkontaktePlugin/js/common.js"**;
 4.	**enable_append_get_params** - append or not the GET params, which passed from iframe, to every uri on your site. If it is set to false, you have to manage security of your application by yourself;
-5.	**user_model** - the name of the doctrine user model, apparently. Default value is **User**;
-6.	**photo_getter_class** - class used for retrieve path to the file needed to upload to VK server. See ** Upload files to server** chapter.
+5.	**photo_getter_class** - class used for retrieve path to the file needed to upload to VK server. See ** Upload files to server** chapter.
 
-sfVkontakteUser class has the method **getNeedFetch**. This method returns the condition of fetch or not friends and profiles. So you can write your own method in your **myUser** class to redefine this behaviour.
+PluginsfVkontakteUser model class has the method **getNeedFetch**. This method returns the condition of fetch or not friends and profiles. So you can write your own method in generated **sfVkontakteUser** model class to redefine this behaviour.
 
 ## Documentation:
 
@@ -135,17 +126,17 @@ Generally, it means that you should write every link code on the site by link_to
 
 In any place in your code you have:
 
-the model User
-		$this->user // in actions, instance of model User class
-		$user 		// the same one in templates
+the model sfVkontakteUser
+		$this->vkontakteUser // in actions, instance of model User class
+		$vkontakteUser 		// the same one in templates
 
 and vkontakte security user
-		$this->getUser() // in actions, instance of sfVkontakteUser
+		$this->getUser() // in actions, instance of sfVkontakteSecurityUser
 		$sf_user 		 // in templates
 
-Model User has a number of fields. First, it has all the fields defined in plugin app.yml. Also it has **settings** field - api settings that user set. Finally, it has a fetched_at field - date and time when users settings were saved.
+Model sfVkontakteUser has a number of fields. First, it has all the fields defined in plugin app.yml. Also it has **settings** field - api settings that user set. Finally, it has a fetched_at field - date and time when users settings were saved.
 
-Use Doctrine Collection $this->user->Friends - to get friends list of current user.
+Use Doctrine Collection $this->vkontakteUser->Friends - to get friends list of current user.
 
 These fields are automatically updating every 24 hours (it can be changed by redefine getNeedFetch of your myUser class).
 
@@ -215,10 +206,9 @@ You can override name of the method and list of parameters by setting in options
 
 ## To do:
 
-1.	Move FriendReference model to the actAs behaviour.
-2.  Remove dependency on jQuery.
-3.  Add loader to ajax requests.
-4.  Always fetch current user profile, even if app_vkontakte_enable_fetch is false.
-5.  Audio and video upload wrappers.
-6.  Set profile photo wrapper.
-7.  Simple payment system.
+1.  Remove dependency on jQuery.
+2.  Add loader to ajax requests.
+3.  Always fetch current user profile, even if app_vkontakte_enable_fetch is false.
+4.  Audio and video upload wrappers.
+5.  Set profile photo wrapper.
+6.  Simple payment system.

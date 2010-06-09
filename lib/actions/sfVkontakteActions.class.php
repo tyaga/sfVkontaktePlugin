@@ -11,17 +11,16 @@ class sfVkontakteActions extends sfActions {
 	 * @return
 	 */
 	public function preExecute() {
-		$userModelTable = sfConfig::get('app_vkontakte_user_model');
 		if ($this->getUser()->id) {
-			// get or create model user
-			$this->user = Doctrine_Core::getTable($userModelTable)->findOneById($this->getUser()->id);
-			if (!$this->user) {
-				$this->user = new $userModelTable();
-				$this->user->id = $this->getUser()->id;
-				$this->user->save();
+			// get or create model sfVkontakteUser
+			$this->vkontakteUser = sfVkontakteUserTable::getInstance()->find($this->getUser()->id);
+			if (!$this->vkontakteUser) {
+				$this->vkontakteUser = new sfVkontakteUser();
+				$this->vkontakteUser->id = $this->getUser()->id;
+				$this->vkontakteUser->save();
 			}
 			// if we need to fetch profiles
-			$this->getUser()->need_fetch = sfConfig::get('app_vkontakte_enable_fetch') && $this->getUser()->getNeedFetch($this->user);
+			$this->getUser()->need_fetch = sfConfig::get('app_vkontakte_enable_fetch') && $this->vkontakteUser->getNeedFetchFriends();
 		}
 		if (sfConfig::get('app_vkontakte_enable_add_js')) {
 			// add JS to response

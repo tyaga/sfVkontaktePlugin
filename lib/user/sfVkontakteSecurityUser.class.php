@@ -1,13 +1,13 @@
 <?php
 /**
- * sfVkontakteUser user class
+ * sfVkontakteSecurityUser user class
  *
  * @package	sfVkontaktePlugin
  * @subpackage user
  * @author	 Alexey Tyagunov <atyaga@gmail.com>
  */
 
-class sfVkontakteUser extends sfBasicSecurityUser {
+class sfVkontakteSecurityUser extends sfBasicSecurityUser {
 
 	public $id = null;
 	public $need_fetch = false;
@@ -29,14 +29,6 @@ class sfVkontakteUser extends sfBasicSecurityUser {
 		}
 	}
 	/**
-	 * if we need to fetch profiles
-	 * @param  $user
-	 * @return bool
-	 */
-	public function getNeedFetch($user) {
-		return $user->fetched_at < date('Y-m-d');
-	}
-	/**
 	 *
 	 * @param string $name
 	 * @param array $arguments
@@ -45,15 +37,5 @@ class sfVkontakteUser extends sfBasicSecurityUser {
 	public function  __call($name, $arguments) {
 		return sfVkontakteTools::getInstance()->__call($name, $arguments);
 	}
-/*	public function upload_photo($filename, $server) {
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-		curl_setopt($ch, CURLOPT_URL, $server);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, array('file1' => $filename));
-		$res = curl_exec ($ch);
-		curl_close ($ch);
-		return $res;
-	}*/
+
 }
