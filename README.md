@@ -142,6 +142,8 @@ These fields are automatically updating every 24 hours (it can be changed by red
 
 ### Client side, vkApp class
 
+If you want to watch loading and run processes in your console, define "DEBUG = true;" in your js file. 
+
 Usual way to use these classes is to write to your main.js code like this:
 
 	$(function() {

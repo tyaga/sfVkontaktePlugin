@@ -6,7 +6,7 @@ all:
     enable_add_js: true
     enable_append_get_params: true
 
-    photo_getter_class: vkPhotoGetter
+    photo_getter_class: sfVkontaktePhotoGetter
 
 ## There is no need to use this config below
     api_url: http://api.vkontakte.ru/api.php

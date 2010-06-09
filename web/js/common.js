@@ -1,12 +1,10 @@
 /**
- * App
+ * vkApp
  *
  * @package	sfVkontaktePlugin
  * @subpackage js lib
  * @author	 Alexey Tyagunov <atyaga@gmail.com>
  */
-DEBUG = true;
-
 /**
  * Settings constants holder
  */
@@ -217,23 +215,23 @@ function vkApp(callback /*, options*/) {
 	/**
 	 * work around queue of callbacks
 	 */
-	var callbackQueue = {};
+	var queue = {};
 	this.addCallback = function(name, callback) {
-		if (typeof callbackQueue[name] == 'undefined') {
-			callbackQueue[name] = new Array();
+		if (typeof queue[name] == 'undefined') {
+			queue[name] = new Array();
 		}
-		callbackQueue[name].push(callback);
+		queue[name].push(callback);
 		VK.addCallback(name, function() {
-			for (var c in callbackQueue[name]) {
-				if (callbackQueue[name][c] != null) {
-					callbackQueue[name][c].apply(null, arguments);
+			for (var c in queue[name]) {
+				if (queue[name][c] != null) {
+					queue[name][c].apply(null, arguments);
 				}
 			}
 		});
-		return callbackQueue[name].length - 1;
+		return queue[name].length - 1;
 	};
 	this.removeCallback = function(name, callback_id) {
-		callbackQueue[name].splice(callback_id, 1, null);
+		queue[name].splice(callback_id, 1, null);
 	};
 
 	this.upload_photo = function(callback, options) {
@@ -247,6 +245,11 @@ function vkApp(callback /*, options*/) {
 			server_method: 'get',
 			server_method_params: {}
 		}, options));
+	};
+	this.resizeWindow = function() {
+		window.setTimeout(function() {
+			VK.callMethod('resizeWindow', $(document.body).outerWidth(true), $(document.body).outerHeight(true)); 
+		}, 100);
 	};
 	/**
 	 * Constructor
@@ -387,6 +390,9 @@ function vkWallUploader(callback, options) {
 		if (q.length > 0) {
 			var data = q.shift();
 			data[0].apply(data[1], data[2]);
+		}
+		else {
+			callback();
 		}
 	}
 };
