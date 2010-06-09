@@ -377,17 +377,17 @@ function vkWallUploader(callback, options) {
 		queue.push([function(wall_id) {
 			upload(wall_id, function(data){
 				save(data, function() {
-					if (queue.length > 0) {
-						var data = queue.shift();
-						data[0].apply(data[1], data[2]);
-					}
+					call(queue);
 				})
 			});
 		}, null, [options.uids[uid]]]);
 	}
-	if (queue.length > 0) {
-		var data = queue.shift();
-		data[0].apply(data[1], data[2]);
+	call(queue);
+	function call(q){
+		if (q.length > 0) {
+			var data = q.shift();
+			data[0].apply(data[1], data[2]);
+		}
 	}
 };
 Tools = {
