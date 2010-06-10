@@ -82,3 +82,5 @@ all:
       faculty:      { type: integer }
       faculty_name: { type: string }
       graduation:   { type: integer }
+      contacts: {type: none}
+      education: {type: none}

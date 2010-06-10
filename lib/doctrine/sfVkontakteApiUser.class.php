@@ -17,7 +17,9 @@ class sfVkontakteApiUser extends Doctrine_Template {
 		$columns = sfConfig::get('app_vkontakte_profile_fields');
 
 		foreach ($columns as $fieldName => $options) {
-			$this->hasColumn($fieldName, $options['type']);
+			if ($options['type'] != 'none') {
+				$this->hasColumn($fieldName, $options['type']);
+			}
 		}
 	}
 }

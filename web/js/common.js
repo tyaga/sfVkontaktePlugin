@@ -257,7 +257,8 @@ function vkApp(callback /*, options*/) {
 	 * All the running code should be inside the create callback
 	 *
 	 */
-	log('create app');
+	log('Create application');
+	/*try {*/
 	VK.init(function() {
 
 		// load url parameters into VK.params
@@ -271,6 +272,17 @@ function vkApp(callback /*, options*/) {
 			install();
 		}
 	});
+	/*}
+	catch(e) {
+		if (e.name == 'TypeError') {
+			log("Can't run app outside vkontakte iframe, redirect");
+			//window.location.href = 'http://vkontakte.ru/app' + vkontakte_options.application_id;
+		}
+		else {
+			log("An error occured: " + e);
+		}
+		console.log(e);
+	}*/
 };
 
 function vkPhotoUploader(callback, options) {
