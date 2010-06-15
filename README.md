@@ -26,6 +26,12 @@ This plugin is still in development, but the development concerns only the adjus
 
 ##Installation:
 
+* Install the plugin
+
+		./symfony plugin:install sfVkontaktePlugin
+
+or
+
 *  Use **git submodule** command to fetch code or just do **git clone** command into your plugin directory. Then enable plugin in SF_ROOT/config/ProjectConfiguration.class.php:
 
 		// SF_ROOT/config/ProjectConfiguration.class.php

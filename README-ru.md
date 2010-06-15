@@ -1,6 +1,6 @@
 # Плагин sfVkontaktePlugin для symfony 1.4
 
-Документация на английском языке - README.md
+English documentation - README.md
 
 **Что это такое?**
 
@@ -25,6 +25,12 @@
 *   модуль php-curl для POST-запросов к VK Api
 
 ##Установка:
+
+*  Установите плагин из репозитория symfony:
+
+		./symfony plugin:install sfVkontaktePlugin
+
+или
 
 *  Либо используйте **git submodule**, либо просто склонируйте **git clone** репозиторй в папку с плагинами проекта. Затем активируйте плагин в файле SF_ROOT/config/ProjectConfiguration.class.php:
 
