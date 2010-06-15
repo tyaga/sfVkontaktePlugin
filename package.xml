@@ -10,10 +10,10 @@
   <email>atyaga@gmail.com</email>
   <active>yes</active>
  </lead>
- <date>2010-06-15</date>
+ <date>2010-06-16</date>
  <version>
-   <release>1.0.0</release>
-   <api>1.0.0</api>
+   <release>1.0.1</release>
+   <api>1.0.1</api>
  </version>
  <stability>
   <release>stable</release>
@@ -21,7 +21,7 @@
  </stability>
 <license uri="http://www.symfony-project.com/license">MIT</license>
  <notes>-</notes>
- <contents><dir name="/"><file name="README.md" role="data"/><file name="README" role="data"/><file name="sfVkontaktePlugin-1.0.0.tgz" role="data"/><dir name="lib"><dir name="user"><file name="sfVkontakteSecurityUser.class.php" role="data"/></dir><dir name="actions"><file name="sfVkontakteActions.class.php" role="data"/></dir><dir name="model"><dir name="doctrine"><file name="PluginsfVkontakteFriendship.class.php" role="data"/><file name="PluginsfVkontakteUser.class.php" role="data"/><file name="PluginsfVkontakteFriendshipTable.class.php" role="data"/><file name="PluginsfVkontakteUserTable.class.php" role="data"/></dir></dir><dir name="doctrine"><file name="sfVkontakteApiUser.class.php" role="data"/></dir><dir name="tools"><file name="sfVkontakteTools.class.php" role="data"/><file name="sfVkontaktePhotoGetter.class.php" role="data"/><file name="sfFetchHelper.class.php" role="data"/></dir><dir name="routing"><file name="sfVkontaktePatternRouting.class.php" role="data"/><file name="sfVkontakteListenerRouting.class.php" role="data"/></dir></dir><dir name="modules"><dir name="sfVkontakteFetch"><dir name="actions"><file name="actions.class.php" role="data"/></dir><dir name="templates"><file name="_messages.php" role="data"/><file name="_jsonDebug.php" role="data"/><file name="_init_js_options.php" role="data"/></dir></dir></dir><dir name="config"><file name="app.yml" role="data"/><dir name="doctrine"><file name="schema.yml" role="data"/></dir><file name="settings-example.yml" role="data"/><file name="sfVkontaktePluginConfiguration.class.php" role="data"/></dir><dir name="web"><dir name="js"><file name="common.js" role="data"/></dir><dir name="images"><dir name="uploads"><file name="test_upload.jpg" role="data"/></dir></dir></dir><file name="README-ru.md" role="data"/><file name="LICENSE" role="data"/></dir></contents>
+ <contents><dir name="/"><file name="README.md" role="data"/><file name="README" role="data"/><dir name="lib"><dir name="user"><file name="sfVkontakteSecurityUser.class.php" role="data"/></dir><dir name="actions"><file name="sfVkontakteActions.class.php" role="data"/></dir><dir name="model"><dir name="doctrine"><file name="PluginsfVkontakteFriendship.class.php" role="data"/><file name="PluginsfVkontakteUser.class.php" role="data"/><file name="PluginsfVkontakteFriendshipTable.class.php" role="data"/><file name="PluginsfVkontakteUserTable.class.php" role="data"/></dir></dir><dir name="doctrine"><file name="sfVkontakteApiUser.class.php" role="data"/></dir><dir name="tools"><file name="sfVkontakteTools.class.php" role="data"/><file name="sfVkontaktePhotoGetter.class.php" role="data"/><file name="sfFetchHelper.class.php" role="data"/></dir><dir name="routing"><file name="sfVkontaktePatternRouting.class.php" role="data"/><file name="sfVkontakteListenerRouting.class.php" role="data"/></dir></dir><dir name="modules"><dir name="sfVkontakteFetch"><dir name="actions"><file name="actions.class.php" role="data"/></dir><dir name="templates"><file name="_messages.php" role="data"/><file name="_jsonDebug.php" role="data"/><file name="_init_js_options.php" role="data"/></dir></dir></dir><dir name="config"><file name="app.yml" role="data"/><dir name="doctrine"><file name="schema.yml" role="data"/></dir><file name="settings-example.yml" role="data"/><file name="sfVkontaktePluginConfiguration.class.php" role="data"/></dir><dir name="web"><dir name="js"><file name="common.js" role="data"/></dir><dir name="images"><dir name="uploads"><file name="test_upload.jpg" role="data"/></dir></dir></dir><file name="README-ru.md" role="data"/><file name="LICENSE" role="data"/></dir></contents>
 
  <dependencies>
   <required>
@@ -45,5 +45,5 @@
  </phprelease>
 
  <changelog>
- <release><version><release>1.0.0</release><api>1.0.0</api></version><stability><release>stable</release><api>stable</api></stability><license uri="http://www.symfony-project.com/license">MIT</license><date>2010-06-15</date><notes>Initial pear plugin release</notes></release></changelog>
+ <release><version><release>1.0.0</release><api>1.0.0</api></version><stability><release>stable</release><api>stable</api></stability><license uri="http://www.symfony-project.com/license">MIT</license><date>2010-06-16</date><notes>Initial pear plugin release</notes></release><release><version><release>1.0.1</release><api>1.0.1</api></version><stability><release>stable</release><api>stable</api></stability><license uri="http://www.symfony-project.com/license">MIT</license><date>2010-06-16</date><notes>Fix DEBUG js error</notes></release></changelog>
 </package>
