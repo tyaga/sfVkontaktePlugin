@@ -12,8 +12,8 @@
  </lead>
  <date>2010-06-16</date>
  <version>
-   <release>1.0.1</release>
-   <api>1.0.1</api>
+   <release>1.0.2</release>
+   <api>1.0.2</api>
  </version>
  <stability>
   <release>stable</release>
@@ -45,5 +45,5 @@
  </phprelease>
 
  <changelog>
- <release><version><release>1.0.0</release><api>1.0.0</api></version><stability><release>stable</release><api>stable</api></stability><license uri="http://www.symfony-project.com/license">MIT</license><date>2010-06-16</date><notes>Initial pear plugin release</notes></release><release><version><release>1.0.1</release><api>1.0.1</api></version><stability><release>stable</release><api>stable</api></stability><license uri="http://www.symfony-project.com/license">MIT</license><date>2010-06-16</date><notes>Fix DEBUG js error</notes></release></changelog>
+ <release><version><release>1.0.0</release><api>1.0.0</api></version><stability><release>stable</release><api>stable</api></stability><license uri="http://www.symfony-project.com/license">MIT</license><date>2010-06-16</date><notes>Initial pear plugin release</notes></release><release><version><release>1.0.1</release><api>1.0.1</api></version><stability><release>stable</release><api>stable</api></stability><license uri="http://www.symfony-project.com/license">MIT</license><date>2010-06-16</date><notes>Fix DEBUG js error</notes></release><release><version><release>1.0.2</release><api>1.0.2</api></version><stability><release>stable</release><api>stable</api></stability><license uri="http://www.symfony-project.com/license">MIT</license><date>2010-06-16</date><notes>#2 Fix DEBUG js error</notes></release></changelog>
 </package>
