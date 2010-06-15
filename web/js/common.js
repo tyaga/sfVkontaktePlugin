@@ -414,7 +414,7 @@ Tools = {
 		var elapsed = (new Date().getTime() - Tools.timer);
 		var date = new Date(elapsed);
 		msg = '[' + date.getSeconds() + '.' + date.getMilliseconds() + '] ' +  msg ;
-		if (DEBUG) {
+		if ((undefined !== DEBUG) && DEBUG ) {
 			if (undefined !== window.console) {
 				console.log(msg);
 			}

@@ -16,9 +16,9 @@
 
 Плагин находится в стадии разработки, но разработка в основном направлена на увеличение возможностей настройки, но не на api. В целом он в работоспособном состоянии.
 
-Тестовое приложение, основанное на этом плагине скоро будет одобрено администрацией ВКонтакте, и ссылка на него появится тут.
+[Тестовое приложение, основанное на плагине](http://vkontakte.ru/app1889525). Cкоро будет одобрено администрацией.
 
-##Требования к инфраструктуре:
+##Требования:
 
 *   [Symfony](http://www.symfony-project.org/) 1.3 и выше. ORM - только Doctrine.
 *   [jQuery](http://jquery.com) 1.4.2 (может быть и ранние версии, не тестировал)
@@ -26,63 +26,63 @@
 
 ##Установка:
 
-*  Use **git submodule** command to fetch code or just do **git clone** command into your plugin directory. Then enable plugin in SF_ROOT/config/ProjectConfiguration.class.php:
+*  Либо используйте **git submodule**, либо просто склонируйте **git clone** репозиторй в папку с плагинами проекта. Затем активируйте плагин в файле SF_ROOT/config/ProjectConfiguration.class.php:
 
 		// SF_ROOT/config/ProjectConfiguration.class.php
 		$this->enablePlugins('sfVkontaktePlugin');
 
-*  Enable the sfVkontakteFetch module to allow plugin to fetch profiles and upload photos to VK server. Add this line to your SF_ROOT/frontend/config/settings.yml file:
+*  Активируйте модуль sfVkontakteFetch для того, чтобы позволить плагину сохранять профили и друзей и загружать фото на сервера ВК. Добавьте в файл SF_ROOT/frontend/config/settings.yml:
 
 		enabled_modules: [default, sfVkontakteFetch]
 
-*  Change routing options in factories.yml to automatically add mandatory iframe parameters to every link on your site. Change parameter in your SF_ROOT/frontend/config/factories.yml. If you don't want to add mentioned parameters, set the **enable_append_get_params** configuration to *false*. See the Configuration chapter.
+*  Измените настройки роутинга в файле factories.yml для того, чтобы автоматически добавлять к каждой ссылке параметры, с которыми запустилось приложение из IFrame. Измените настройку в файле SF_ROOT/frontend/config/factories.yml. Если вы не хотите автоматически добавлять параметры, установите настройку **enable_append_get_params: false*. См. раздел Конфигурация.
 
 		all:
 		  routing:
 		    class: sfVkontaktePatternRouting
 
-*  Change security settings of your frontend application in SF_ROOT/frontend/config/security.yml
+*  Измените настройки безопасности в файле SF_ROOT/frontend/config/security.yml
 
 		default:
 		  is_secure: true
 
-*  Download jQuery library and add link to it in view.yml (or use another way to enable jQuery)
+*  Скачайте библиотеку jQuery и добавьте ссылку на неё в view.yml (ну или подключите jQuery любым другим способом)
 
 		javascripts:    [lib/jquery-1.4.2, main]
 
-*  Change inheritance of the myUser class in SF_ROOT/frontend/lib/myUser.class.php
+*  Измените класс, от которого унаследован класс myUser в файле SF_ROOT/frontend/lib/myUser.class.php
 
 		class myUser extends sfVkontakteSecurityUser {
 
-*  Change inheritance of your actions.class.php .
+*  Измените класс, от которого унаследованы классы actions в файлах actions.class.php .
 
 		class mainActions extends sfVkontakteActions {
 
-*  Add js setter partial to application layout.php. Add it inside the &lt;head&gt; tag and before including all other javascripts.
+*  Добавьте партиал в layout.php. Его надо добавить в теге &lt;head&gt; перед включением других JS-ов.
 
 		<? include_partial('sfVkontakteFetch/init_js_options')?>
 
-*  If you want to use default installation and settings messages, include the **_messages** partial to the application layout.php file. Include it inside the &lt;body&gt; tag. Otherwise, define ids of **div** tags that contain your messages in second parameter **options** of the vkApp constructor. See Client side chapter.
+*  Если вы хотите, чтобы выводились стандартные сообщения о необходимости установки и настройке, то добавьте партиал **_messages** в layout.php . Включите его в теге &lt;body&gt;. В ином случае, задайте id тегов **div** , содержащих ваши сообщения об установке во второй параметр **options** вызова конструктора vkApp . См. раздел Клиентская сторона.
 
 		<? include_partial('sfVkontakteFetch/messages')?>
 
-*  Copy settings-example.yml to your config directory. Put the settings of your application in settings.yml. You can copy these settings from "edit application" page on vk.com site. Optionally add SF_ROOT/config/settings.yml to your VCS ignore file. It allows you to have two instances of your application with different settings. For example, development and production instances.
+*  Скопируйте файл settings-example.yml в папку настроек **config**. Затем поместите настройки вашего приложения в файл settings.yml. Вы можете скопировать эти настройки со страницы редактирования вашего приложения на сайте vk. Также вы можете добавить файл SF_ROOT/config/settings.yml в игнор вашей системы VCS. Это позволит вам иметь несколько приложений со своими настройками, например, для разработки.
 
 		$ cp SF_ROOT/plugins/sfVkontaktePlugin/config/settings-example.yml SF_ROOT/config/settings.yml
 		$ vi SF_ROOT/config/settings.yml
 
-*  Build and load your schema, or import sql manually. Then publish plugin assets.
+*  Сделайте doctrine:build --and-load, или загрузите sql в вашу БД самостоятельно. Затем - plugin:publish-assets.
 
 		$ ./symfony doctrine:build --all --and-load
 		$./symfony plugin:publish-assets
 
-That's all, folks!
+Вот и всё.
 
-## Configuration:
+## Конфигурация:
 
-As stated before, you have to copy **config/settings-example.yml** file to your config directory and change the **application_id** and **secret_key** values.
+Как указано выше, вы должны скопировать **config/settings-example.yml** в папку config и изменить **application_id** и **secret_key**.
 
-Another configuration is in the app.yml file:
+Остальная настройка - в файле app.yml:
 
 	    enable_fetch: true
 	    enable_register_routes: true
@@ -91,80 +91,79 @@ Another configuration is in the app.yml file:
 
 	    photo_getter_class: vkPhotoGetter
 
-1.	**enable_fetch** - to save or not user profile, user friends and profiles of user friends to the database;
-2.	**enable_register_routes** - automatically add or not the *fetch* route and the *upload photo* route to the routing collection. If this option is set to false, you have to write these routing rules in your routing.yml file;
-3.	**enable_add_js** - add or not javascript files to the response. If it is set to false, you have to add required javascripts to your **view.yml** file or to js compressor paths. The required javascripts are **"http://vkontakte.ru/js/api/xd_connection.js?2"** and **"/sfVkontaktePlugin/js/common.js"**;
-4.	**enable_append_get_params** - append or not the GET params, which passed from iframe, to every uri on your site. If it is set to false, you have to manage security of your application by yourself;
-5.	**photo_getter_class** - class used for retrieve path to the file needed to upload to VK server. See ** Upload files to server** chapter.
+1.	**enable_fetch** - Сохранять или нет профиль пользователя и его друзей и их профили в БД;
+2.	**enable_register_routes** - добавлять или нет правила роутинга *fetch* и *upload photo* . Если эта настройка выключена, то вы должны самостоятельно написать такие роутинг-правила в вашем routing.yml;
+3.	**enable_add_js** - добавлять или нет javascript в response. Если эта настройка выключена, то вы должны самостоятельно добавить необходимые скрипты в файл **view.yml**. Необходимые JS это **"http://vkontakte.ru/js/api/xd_connection.js?2"** и **"/sfVkontaktePlugin/js/common.js"**;
+4.	**enable_append_get_params** - добавлять или нет к каждой ссылке на сайте GET параметры, переданные из IFrame. Если эта настройка выключена, то вы должны управлять защищённостью вашего приложения самостоятельно;
+5.	**photo_getter_class** - класс, используемый для получения пути до файла, который нужно загрузить на сервер VK. См. раздел ** Загрузка файлов на сервер**.
 
-PluginsfVkontakteUser model class has the method **getNeedFetch**. This method returns the condition of fetch or not friends and profiles. So you can write your own method in generated **sfVkontakteUser** model class to redefine this behaviour.
+Модель PluginsfVkontakteUser имеет метод **getNeedFetch**. Этот метод возвращает, есть ли необходимость сохранять профиль и друзей. Вы можете переопределить этот метод в сгенерированной модели **sfVkontakteUser** для того, чтобы переопределить это.
 
-## Documentation:
+## Документация:
 
-### Server side, sfVkontakteTools class
+### Серверная сторона, класс sfVkontakteTools
 
-sfVkontaktePlugin provides you with sfVkontakteTools class, that allows you to call secure VK Api function.
-In PLUGIN/config/app.yml you can see all secure methods provided by VK with theirs parameters. In any part of your project you can write:
+sfVkontaktePlugin предоставляет вам класс sfVkontakteTools, который позволяет вам вызывать защищённые методы VK Api.
+В PLUGIN/config/app.yml вы можете увидеть список всех защищённых методов, предоставляемых VK с их параметрами. В любом месте вашего проекта вы можете написать что-то наподобие:
 
 		$this->getUser()->getBalance( array('uid' => $this->getUser()->id) );
 
-or
+или
 		sfVkontakteTools::getInstance()->getBalance( array('uid' => $this->getUser()->id) );
 
-, where getBalance is the name of the method, and it calls with array of proper parameters.
+, где getBalance это название метода.
 
-If you need to call for example the *sendNotification* method, you would like to pass utf8 string (in Russian) in the *message* parameter. Plugin will handle it and automatically make proper signature to the call.
+Если вы хотите, к примеру, вызвать метод *sendNotification*, вы, скорее всего, захотите передать строку на русском языке (в utf8) в параметре *message*. Класс обработает это автоматически и создаст правильную подпись (signature) для такого запроса.
 
-Another example:
 		// in some action
 		$this->getUser()->sendNotification(array('uids'=> $this->getUser()->id, 'message'=> 'it works!'));
 
-### Links, routing, and security
+### Ссылки, роутинг и безопасность
 
-I let VKontakte to check authority of user. Vkontakte makes it by checking GET parameters passed to the iframe. It means that we should pass these parameters to every link on our site. I choose the routing way to do it.
-Generally, it means that you should write every link code on the site by link_to or url_for functions. Another requirement is that all your accessible from VK Iframe applications must be secured (is_secure: true in security.yml).
+Плагин позволяет VKontakte проверять, авторизован ли пользователь или нет. Vkontakte делает это путём передачи GET параметров в iframe, которые плагин проверяет на соответствие ключу. Это означает, что мы должны передавать эти GET-параметры в любой ссылке на нашем сайте. Я выбрал метод изменения роутинг-класса для того, чтобы это сделать.
+В целом это означает, что вы должны писать все ссылки на сайте с использованием функций link_to или url_for. Другое требование - все приложения проекта, доступные из iframe VK должны быть защищёнными (is_secure: true в security.yml).
 
-### User
+### Пользователь
 
-In any place in your code you have:
+В любом месте вашего проекта у вас есть:
 
-the model sfVkontakteUser
-		$this->vkontakteUser // in actions, instance of model User class
-		$vkontakteUser 		// the same one in templates
+sfVkontakteUser (модель)
+		$this->vkontakteUser // в actions, экземпляр модели
+		$vkontakteUser 		// то же самое в шаблонах
 
-and vkontakte security user
-		$this->getUser() // in actions, instance of sfVkontakteSecurityUser
-		$sf_user 		 // in templates
+и защищённый пользователь vkontakte
+		$this->getUser() // в actions, экземпляр sfVkontakteSecurityUser
+		$sf_user 	 // в шаблонах
 
-Model sfVkontakteUser has a number of fields. First, it has all the fields defined in plugin app.yml. Also it has **settings** field - api settings that user set. Finally, it has a fetched_at field - date and time when users settings were saved.
+В модели sfVkontakteUser есть набор полей. Прежде всего, модель хранит все поля профиля пользователя VK, перечисленные в app.yml плагина. Также модель имеет поле **settings** настройки, которые выбрал пользователь. Наконец, в модели есть поле fetched_at время последнего сохранения профиля, друзей и настроек.
 
-Use Doctrine Collection $this->vkontakteUser->Friends - to get friends list of current user.
+Используйте Doctrine Collection $this->vkontakteUser->Friends - для того, чтобы получить коллекцию друзей текущего пользователя.
 
-These fields are automatically updating every 24 hours (it can be changed by redefine getNeedFetch of your myUser class).
+Эти поля автоматически сохраняются каждые 24 часа (это может быть переопределено в методе getNeedFetch вашего класса myUser).
 
-### Client side, vkApp class
+### Клиентская часть, класс vkApp
 
-If you want to watch loading and run processes in your console, define "DEBUG = true;" in your js file. 
+Если вы хотите видеть процесс загрузки и работы js-кода, то вы можете задать "DEBUG = true;". 
 
-Usual way to use these classes is to write to your main.js code like this:
+Стандартный путь использования класса vkApp таков. В вашем main.js:
 
 	$(function() {
 		app = new vkApp(callback);
 	});
 
-The first parameter of constructor is the function, that will be called after all initialization. For example, you can write this code in that function. Let's have this html code, whatever:
+Первый параметр конструктора это коллбек-функция, которая представляет собой процесс выполнения приложения - она будет выполнена только после установки приложения и после того, как пользователь установит необходимые настройки. Например, вы можете использовать такой код. Пусть у нас есть HTML:
 
 	<div id='content'></div>
 	<a id='post-photo' href='javascript:void(0);'>post_photo</a><br/>
 	<a id='post-wall' href='javascript:void(0);'>post wall</a>
 
-Then the code will be:
+Тогда код будет такой:
 
 	var callback =  function (){
-		// test use of the api object, retrieve name and surname
+		// тестовое использование объекта app, получение параметров пользователя
 		$('#content').append(app.User.first_name + ' ' + app.User.last_name);
 
-		// add onclick event - send photo to album
+		// событие onclick - отправить фото в альбом
 		$('#post-photo').click(function() {
 			app.upload_photo(function(){},
 			{
@@ -173,7 +172,7 @@ Then the code will be:
 			})
 		});
 
-		// add onclick event - send photo and message to the walls
+		// событие onclick - отправить фото и сообщение на стены
 		$('#post-wall').click(function() {
 			app.post_walls(function(){},
 			{
@@ -183,36 +182,35 @@ Then the code will be:
 		});
 	}
 
-The second parameter of constructor is options. Default options are:
+Второй параметр конструктора - это настройки options. По умолчанию настройки такие:
 
-1. mandatory_settings. Default value is: *Settings.FRIENDS | Settings.NOTIFY | Settings.PHOTOS*. These settings value are necessary for application running.
-Application asks these settings from user just after install and every page load. If they are not set, applicaion won't run.
-2. unnecessary_settings: Default value is: *Settings.MENU*. If they are not set, the message will appear.
-3. install_element, default value is: *'#sf_vkontakte_install'*,    
-mandatory_settings_element, default value is: *'#sf_vkontakte_settings'*,    
-unnecessary_settings_element, default value is: *'#sf_vkontakte_unnecessary_settings'*,    
-These selectors appear on your page when application isn't installed or settings are not set. If you will not redefine these values, you should use default values, it means that you have to include partial _messages to you layout.php. Otherwise, write your own html (div tags with mentioned ids) and css code.
-4. after_fetch_friends_done and after_fetch_friends_not are callbacks, that are called after fetching profiles and friends.
+1. mandatory_settings. Значение по умолчанию: *Settings.FRIENDS | Settings.NOTIFY | Settings.PHOTOS*. Эти настройки необходимы для выполнения приложения.
+В случае, если такие настройки не установлены, приложение будет запрашивать их каждую загрузку.
+2. unnecessary_settings: Значение по умолчанию: *Settings.MENU*. Если настройка не установлена, то появится сообщение.
+3. install_element, значение по умолчанию: *'#sf_vkontakte_install'*,    
+mandatory_settings_element, значение по умолчанию: *'#sf_vkontakte_settings'*,    
+unnecessary_settings_element, значение по умолчанию: *'#sf_vkontakte_unnecessary_settings'*,    
+Дивы с этими id становятся видны в случае, если приложение не установлено или не выбраны заданные настройки соответственно. Если вы не переопределили эти настройки, то используются заданные по умолчанию, то есть вам надо включить партиал _messages в layout.php. В ином случае, вы можете написать свой html (div-теги с заданными id) и css.
+4. after_fetch_friends_done и after_fetch_friends_not коллбеки, вызываются после успешного или неуспешного сохранения профиля и друзей.
 
-You can override all options by setting them in second options hash.
+Вы можете переопределить эти настройки во втором параметре конструктора.
 
-### Upload files to server - post to wall and upload photo to album
+### Загрузка файлов на сервер - публикация на стену и загрузка изображений в альбомы
 
-The app class has methods **upload_photo** and **post_walls**. They gets two parameters - callback and options. The options hash can contain these items:
- - for app.upload_photo method: album_title or album_id
- - for app.post_walls method: message and uids
+В классе vkApp есть методы **upload_photo** и **post_walls**. Они принимают по два параметра callback и options. Параметр options может содержать такие элементы:
+ - для метода app.upload_photo: album_title или album_id
+ - для метода app.post_walls: message и uids
 
-On the server you should define class, for example myPhotoUploader. Then write name of this class to your app.yml. This class must have static method **get**, which returns a path to the file need to upload with @ in the begining. See example tools/sfVkontaktePhotoGetter.class.php. This method should get one parameter - it passes from client - **server_method_params**.
+На сервере вы должны написать класс (myPhotoUploader). Имя этого класса надо написать в вашем app.yml. В этом классе должен быть статический метод get **get**, который возвращает путь к файлу, который надо загрузить на сервер VK, в начале строки с путём должен стоять символ @. Для примера можете посмотреть класс tools/sfVkontaktePhotoGetter.class.php. Этот метод принимает один параметр - массив, который приходит с клиента - **server_method_params**.
 
-You can override name of the method and list of parameters by setting in options hash:
+Вы можете переопределить эти вызываемый метод и параметры во втором параметре js-вызова:
 		server_method: 'getWallImage',
 		server_method_params: {id: app.User.uid}
 
-## To do:
+## Развитие:
 
-1.  Remove dependency on jQuery.
-2.  Add loader to ajax requests.
-3.  Always fetch current user profile, even if app_vkontakte_enable_fetch is false.
-4.  Audio and video upload wrappers.
-5.  Set profile photo wrapper.
-6.  Simple payment system.
+1.  Убрать зависимость от jQuery.
+2.  Сделать, чтобы профиль пользователя сохранялся всегда, даже если настройка **app_vkontakte_enable_fetch** отключена.
+3.  Сделать загрузку видео и аудио.
+4.  Сделать обёртку для установки фото профиля.
+5.  Сделать простую систему обработки платежей.
