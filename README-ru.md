@@ -1,6 +1,6 @@
 # Плагин sfVkontaktePlugin для symfony 1.4
 
-Документация на английском языке - README.md
+English documentation - README.md
 
 **Что это такое?**
 
