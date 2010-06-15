@@ -26,6 +26,12 @@ English documentation - README.md
 
 ##Установка:
 
+*  Установите плагин из репозитория symfony:
+
+		./symfony plugin:install sfVkontaktePlugin
+
+или
+
 *  Либо используйте **git submodule**, либо просто склонируйте **git clone** репозиторй в папку с плагинами проекта. Затем активируйте плагин в файле SF_ROOT/config/ProjectConfiguration.class.php:
 
 		// SF_ROOT/config/ProjectConfiguration.class.php
