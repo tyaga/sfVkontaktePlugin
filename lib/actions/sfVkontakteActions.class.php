@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * sfVkontakteActions actions class.
  *

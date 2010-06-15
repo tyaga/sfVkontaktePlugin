@@ -1,30 +1,30 @@
-# sfVkontaktePlugin plugin to symfony 1.4
+# Плагин sfVkontaktePlugin для symfony 1.4
 
-Документация на русском языке - README-ru.md
+Документация на английском языке - README.md
 
-**What does plugin do?**
+**Что это такое?**
 
-It was made to strongly simplify the development of [VKontakte](http://vk.com/) [applications](http://vk.com/pages.php?act=developers) on [Symfony Framework](http://www.symfony-project.org/).
+Плагин разработан для упрощения создания IFrame-приложений [VKontakte](http://vk.com/) с использованием php-фреймворка [Symfony](http://www.symfony-project.org/).
 
-*VKontakte is [the most popular social network service](http://en.wikipedia.org/wiki/Vkontakte) in [CIS](http://en.wikipedia.org/wiki/Commonwealth_of_Independent_States). It has around 75 million users.*
+*VKontakte это [самая популярная социальная сеть](http://en.wikipedia.org/wiki/Vkontakte) в СНГ. В ней зарегистрированно около 75 миллионов пользователей.*
 
-Plugin gives you:
+Плагин предоставляет:
 
-1.  Php class for performing secure VKontakte api calls;
-2.  JS library-wrapper for the installation of the application, for making proper settings, uploading photos to VKontakte albums and posting messages on  walls;
-3.  Profile and friends retriever, the tool to save profile of current user and list of his friends to your database.
+1.  Php класс для совершения защищённых запросов к VKontakte api;
+2.  JS библиотеку-обертку для установки приложения, установки правильных настроек, загрузки фото и публикации на стену;
+3.  Автоматическое сохранение профиля текущего пользователя и его друзей в вашу БД.
 
-This plugin is still in development, but the development concerns only the adjustment of plugin features.
+Плагин находится в стадии разработки, но разработка в основном направлена на увеличение возможностей настройки, но не на api. В целом он в работоспособном состоянии.
 
-[The test application for this plugin](http://vkontakte.ru/app1889525). It will be approved by administration soon.
+Тестовое приложение, основанное на этом плагине скоро будет одобрено администрацией ВКонтакте, и ссылка на него появится тут.
 
-##Requirements:
+##Требования к инфраструктуре:
 
-*   [Symfony](http://www.symfony-project.org/) 1.3 and above. ORM must be Doctrine only.
-*   [jQuery](http://jquery.com) 1.4.2 (maybe previous versions)
-*   php-curl module to make VK Api POST requests
+*   [Symfony](http://www.symfony-project.org/) 1.3 и выше. ORM - только Doctrine.
+*   [jQuery](http://jquery.com) 1.4.2 (может быть и ранние версии, не тестировал)
+*   модуль php-curl для POST-запросов к VK Api
 
-##Installation:
+##Установка:
 
 *  Use **git submodule** command to fetch code or just do **git clone** command into your plugin directory. Then enable plugin in SF_ROOT/config/ProjectConfiguration.class.php:
 
