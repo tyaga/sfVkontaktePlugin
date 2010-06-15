@@ -1,4 +1,4 @@
-<?
+<?php
 
 class sfFetchHelper {
 	public static function setFetchedFriends($me, $profiles, $profile, $settings) {

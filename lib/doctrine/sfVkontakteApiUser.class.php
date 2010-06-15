@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * sfVkontakteApiUser doctrine listener  .
  *
