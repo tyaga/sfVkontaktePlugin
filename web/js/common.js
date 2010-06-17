@@ -107,7 +107,7 @@ function vkApp(callback /*, options*/) {
 		var callback_id = this_proxy.addCallback('onSettingsChanged', function(current_settings) {
 			VK.params.api_settings = current_settings;
 			if (Settings.check(current_settings, need_settings)) {
-				log('Changed settings are OK, run callback');
+				log('Changed settings are OK, run callback :' + need_settings );
 				this_proxy.removeCallback('onSettingsChanged', callback_id);
 				callback();
 			}
@@ -205,8 +205,8 @@ function vkApp(callback /*, options*/) {
 				VK.params.is_app_user = 1;
 				hide_message(options.install_element);
 				callback();
-				VK.callMethod('showInstallBox');
 			});
+			VK.callMethod('showInstallBox');
 		}
 		else {
 			callback();
