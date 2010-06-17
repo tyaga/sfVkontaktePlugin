@@ -16,6 +16,7 @@ sfVkontakteUser:
       equal: true
 
 sfVkontakteFriendship:
+  actAs: [Timestampable]
   options:
     symfony:
       form:   false
