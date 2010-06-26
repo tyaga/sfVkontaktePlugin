@@ -6,7 +6,7 @@ sfVkontakteUser:
   actAs: [sfVkontakteApiUser, Timestampable]
   columns:
     settings: integer
-    fetched_at: datetime
+    fetched_at: timestamp
   relations:
     Friends:
       class: sfVkontakteUser
