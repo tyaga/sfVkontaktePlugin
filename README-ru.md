@@ -66,11 +66,11 @@ English documentation - README.md
 
 *  Добавьте партиал в layout.php. Его надо добавить в теге &lt;head&gt; перед включением других JS-ов.
 
-		<? include_partial('sfVkontakteFetch/init_js_options')?>
+		<?php include_partial('sfVkontakteFetch/init_js_options')?>
 
 *  Если вы хотите, чтобы выводились стандартные сообщения о необходимости установки и настройке, то добавьте партиал **_messages** в layout.php . Включите его в теге &lt;body&gt;. В ином случае, задайте id тегов **div** , содержащих ваши сообщения об установке во второй параметр **options** вызова конструктора vkApp . См. раздел Клиентская сторона.
 
-		<? include_partial('sfVkontakteFetch/messages')?>
+		<?php include_partial('sfVkontakteFetch/messages')?>
 
 *  Скопируйте файл settings-example.yml в папку настроек **config**. Затем поместите настройки вашего приложения в файл settings.yml. Вы можете скопировать эти настройки со страницы редактирования вашего приложения на сайте vk. Также вы можете добавить файл SF_ROOT/config/settings.yml в игнор вашей системы VCS. Это позволит вам иметь несколько приложений со своими настройками, например, для разработки.
 

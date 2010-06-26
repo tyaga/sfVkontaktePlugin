@@ -66,11 +66,11 @@ or
 
 *  Add js setter partial to application layout.php. Add it inside the &lt;head&gt; tag and before including all other javascripts.
 
-		<? include_partial('sfVkontakteFetch/init_js_options')?>
+		<?php include_partial('sfVkontakteFetch/init_js_options')?>
 
 *  If you want to use default installation and settings messages, include the **_messages** partial to the application layout.php file. Include it inside the &lt;body&gt; tag. Otherwise, define ids of **div** tags that contain your messages in second parameter **options** of the vkApp constructor. See Client side chapter.
 
-		<? include_partial('sfVkontakteFetch/messages')?>
+		<?php include_partial('sfVkontakteFetch/messages')?>
 
 *  Copy settings-example.yml to your config directory. Put the settings of your application in settings.yml. You can copy these settings from "edit application" page on vk.com site. Optionally add SF_ROOT/config/settings.yml to your VCS ignore file. It allows you to have two instances of your application with different settings. For example, development and production instances.
 
