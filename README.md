@@ -2,7 +2,7 @@
 
 Документация на русском языке - README-ru .md
 
-**What does plugin do?**
+**What does plugin do? **
 
 It was made to strongly simplify the development of [VKontakte](http://vk.com/) [applications](http://vk.com/pages.php?act=developers) on [Symfony Framework](http://www.symfony-project.org/).
 
