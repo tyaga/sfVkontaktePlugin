@@ -1,6 +1,6 @@
 # sfVkontaktePlugin plugin to symfony 1.4
 
-Документация на русском языке - README-ru.md
+Документация на русском языке - README-ru .md
 
 **What does plugin do?**
 
