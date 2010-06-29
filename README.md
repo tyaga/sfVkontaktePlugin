@@ -16,7 +16,7 @@ Plugin gives you:
 
 This plugin is still in development, but the development concerns only the adjustment of plugin features.
 
-[The test application for this plugin](http://vkontakte.ru/app1889525). It will be approved by administration soon.
+[The test application for this plugin](http://vkontakte.ru/app1889525).
 
 ##Requirements:
 
