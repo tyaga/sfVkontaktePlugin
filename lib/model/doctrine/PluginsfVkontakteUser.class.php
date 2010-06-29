@@ -13,6 +13,6 @@
 abstract class PluginsfVkontakteUser extends BasesfVkontakteUser
 {
 	public function getNeedFetchFriends() {
-		return $this->fetched_at < date('Y-m-d');
+		return ($this->fetched_at < date('Y-m-d'));
 	}
 }
