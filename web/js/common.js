@@ -2,7 +2,7 @@
  * vkApp
  *
  * @package	sfVkontaktePlugin
- * @subpackage js lib
+ * @subpackage	js lib
  * @author	 Alexey Tyagunov <atyaga@gmail.com>
  */
 /**
