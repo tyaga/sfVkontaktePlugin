@@ -15,10 +15,11 @@ class sfVkontakteApiUser extends Doctrine_Template {
 	public function setTableDefinition() {
 		// get columns from app.yml
 		$columns = sfConfig::get('app_vkontakte_profile_fields');
-
-		foreach ($columns as $fieldName => $options) {
-			if ($options['type'] != 'none') {
-				$this->hasColumn($fieldName, $options['type']);
+		if (count($columns)) {
+			foreach ($columns as $fieldName => $options) {
+				if ($options['type'] != 'none') {
+					$this->hasColumn($fieldName, $options['type']);
+				}
 			}
 		}
 	}
