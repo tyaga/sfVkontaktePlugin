@@ -2,7 +2,11 @@
 
 class sfFetchHelper {
 	public static function setFetchedFriends($me, $profiles, $profile, $settings) {
-		$fields = array_keys(sfConfig::get('app_vkontakte_profile_fields'));
+		$profileFields = sfConfig::get('app_vkontakte_profile_fields');
+		if (!is_array($profileFields)) {
+			$profileFields = array();
+		}
+		$fields = array_keys($profileFields);
 
 		// update current user $profile
 		foreach ($profile[0] as $field => $value) {
