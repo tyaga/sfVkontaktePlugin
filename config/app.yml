@@ -61,26 +61,26 @@ all:
       # удаляет языковую фразу.
       deleteLanguageValue: { fields: [key] }
 
-    profile_fields:
-      first_name:   { type: string }
-      last_name:    { type: string }
-      nickname:     { type: string }
-      sex:          { type: integer }
-      bdate:        { type: string }
-      city:         { type: integer }
-      country:      { type: integer }
-      timezone:     { type: string }
-      photo:        { type: string }
-      photo_medium: { type: string }
-      photo_big:    { type: string }
-      has_mobile:   { type: boolean }
-      rate:         { type: float }
-      home_phone:   { type: string }
-      mobile_phone: { type: string }
-      university:   { type: integer }
-      university_name: { type: string }
-      faculty:      { type: integer }
-      faculty_name: { type: string }
-      graduation:   { type: integer }
-      contacts: {type: none}
-      education: {type: none}
+#    profile_fields:
+#      first_name:   { type: string }
+#      last_name:    { type: string }
+#      nickname:     { type: string }
+#      sex:          { type: integer }
+#      bdate:        { type: string }
+#      city:         { type: integer }
+#      country:      { type: integer }
+#      timezone:     { type: string }
+#      photo:        { type: string }
+#      photo_medium: { type: string }
+#      photo_big:    { type: string }
+#      has_mobile:   { type: boolean }
+#      rate:         { type: float }
+#      home_phone:   { type: string }
+#     mobile_phone: { type: string }
+#      university:   { type: integer }
+#      university_name: { type: string }
+#      faculty:      { type: integer }
+#      faculty_name: { type: string }
+#      graduation:   { type: integer }
+#      contacts: {type: none}
+#      education: {type: none}

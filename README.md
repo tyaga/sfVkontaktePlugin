@@ -102,7 +102,7 @@ Another configuration is in the app.yml file:
 3.	**enable_add_js** - add or not javascript files to the response. If it is set to false, you have to add required javascripts to your **view.yml** file or to js compressor paths. The required javascripts are **"http://vkontakte.ru/js/api/xd_connection.js?2"** and **"/sfVkontaktePlugin/js/common.js"**;
 4.	**enable_append_get_params** - append or not the GET params, which passed from iframe, to every uri on your site. If it is set to false, you have to manage security of your application by yourself;
 5.	**photo_getter_class** - class used for retrieve path to the file needed to upload to VK server. See ** Upload files to server** chapter.
-
+6.  **profile_fields** - add this option to your app.yml, just copy it from plugin config/app.yml file and uncomment needed lines.
 PluginsfVkontakteUser model class has the method **getNeedFetch**. This method returns the condition of fetch or not friends and profiles. So you can write your own method in generated **sfVkontakteUser** model class to redefine this behaviour.
 
 ## Documentation:
