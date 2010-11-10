@@ -2,11 +2,15 @@
 
 class sfFetchHelper {
 	public static function setFetchedFriends($me, $profiles, $profile, $settings) {
-		$profileFields = sfConfig::get('app_vkontakte_profile_fields');
-		if (!is_array($profileFields)) {
-			$profileFields = array();
+
+		$db = Doctrine_Manager::getInstance()->getCurrentConnection();
+		$fields = array_keys(sfConfig::get('app_vkontakte_profile_fields'));
+		foreach ($fields as $k=>$field) {
+			// remove unused fields
+			if ($field == 'contacts' || $field == 'education') {
+				unset($fields[$k]);
+			}
 		}
-		$fields = array_keys($profileFields);
 
 		// update current user $profile
 		foreach ($profile[0] as $field => $value) {
@@ -14,69 +18,85 @@ class sfFetchHelper {
 				$me->$field = $value;
 			}
 		}
+		// set settings and fetched_at
 		$me->settings = $settings;
-		$me->save();
-		if (empty($profiles)) {
-			return true;
-		}
-		// prepare profiles_array
-		$profiles_array = array();
-		$friendIds = array();
-		foreach ($profiles as $profile) {
-			$profiles_array[$profile['uid']] = array();
-			$friendIds[]=$profile['uid'];
-			foreach ($fields as $field) {
-				if (isset($profile[$field]) && $profile[$field]!= '') {
-					$profiles_array[$profile['uid']][$field] = $profile[$field];
-				}
-			}
-		}
-		// prepare users and referenses
-		$users = Doctrine_Core::getTable('sfVkontakteUser')->createQuery()
-				->select()
-				->from('sfVkontakteUser u INDEXBY id')
-				->whereIn('id', $friendIds)
-				->execute();
-		$friendReferences = sfVkontakteFriendshipTable::getInstance()->createQuery()
-				->select()
-				->from('sfVkontakteFriendship fr INDEXBY user_to')
-				->where('fr.user_from = ? ', $me->id)
-				->execute();
-		// start transaction
-		$conn = Doctrine_Manager::connection();
-		$conn->beginTransaction();
-
-		$changed = false;
-		foreach($friendIds as $userId) {
-			if (!isset($profiles_array[$userId])) {
-				continue;
-			}
-			// if there is no user, create one
-			$user = isset($users[$userId])?$users[$userId]:false;
-			if( !$user) {
-				$user = new sfVkontakteUser();
-				$user->id = $userId;
-				$changed = true;
-			}
-			// save user data
-			$user->fromArray($profiles_array[$user->id]);
-			$user->save();
-			// if there is no referense, create one and save
-			if( !isset($friendReferences[$userId])) {
-				$fref = new sfVkontakteFriendship();
-				$fref->user_from = $me->id;
-				$fref->user_to = $userId;
-				$fref->save();
-				$changed = true;
-			}
-		}
-		// save fetched_at to current user
 		$me->fetched_at = date(DateTime::ATOM);
 		$me->save();
 
-		// finish transaction
-		$conn->commit();
-		
-		return $changed;
+		// prepare profiles_array
+		// fill it with fields
+		$profilesArray = array();
+		$fetchedFriendIds = array();
+		foreach ($profiles as $profile) {
+			$profilesArray[$profile['uid']] = array();
+			$fetchedFriendIds[] = $profile['uid'];
+			foreach ($fields as $field) {
+				if (isset($profile[$field]) && $profile[$field] != '') {
+					$profilesArray[$profile['uid']][$field] = $profile[$field];
+				}
+				else {
+					$profilesArray[$profile['uid']][$field] = '';
+				}
+			}
+		}
+		// select current friends
+		$friends = $db->fetchAll('SELECT DISTINCT fr.user_to FROM sf_vkontakte_friendship fr WHERE fr.user_from = :current_user_id ',
+			array('current_user_id'=>$me->id));
+		$friendsIds = array();
+		foreach ($friends as $friend) {
+			$friendsIds[] = $friend['user_to'];
+		}
+
+		// insert other users
+		if (count($profilesArray)) {
+			$values = array();
+			foreach ($profilesArray as $id=>$profile) {
+				$value = array();
+				foreach ($profile as $v) {
+					$value[] = $db->quote($v);
+				}
+				$value[] = $db->quote(date(DateTime::ATOM));
+				$value[] = $db->quote(date(DateTime::ATOM));
+
+				$values[] = $db->quote($id) . ", " . implode(",", $value);
+			}
+
+			$qNewUsers = 'INSERT INTO sf_vkontakte_user (id,  ' . implode(',', $fields) . ', created_at, updated_at)
+				VALUES (' . implode("),\n(", $values) . ')';
+			$qNewUsers .= ' ON DUPLICATE KEY UPDATE ';
+
+			// first_name = VALUES(first_name), ....
+			$fieldsStr = array();
+			foreach ($fields as $f) {
+				$fieldsStr[] = $f . ' = VALUES(' . $f . ')';
+			}
+			$qNewUsers .= implode(', ', $fieldsStr) . ', updated_at = VALUES(updated_at)';
+
+			$db->execute($qNewUsers);
+		}
+
+		$toAdd = array_diff($fetchedFriendIds, $friendsIds);
+		$toDelete = array_diff($friendsIds, $fetchedFriendIds);
+
+		if (count($toDelete)) {
+			// delete removed friendship
+			$db->execute('DELETE FROM sf_vkontakte_friendship
+				WHERE user_to = :user_id AND user_from IN (' . implode(',', $toDelete) . ')', array('user_id' => $me->id));
+			$db->execute('DELETE FROM sf_vkontakte_friendship
+				WHERE user_from = :user_id AND user_to IN (' . implode(',', $toDelete) . ')', array('user_id' => $me->id));
+		}
+		// insert friendship
+		if (count($toAdd)) {
+			$qFriendship = 'INSERT IGNORE INTO sf_vkontakte_friendship (user_from, user_to, created_at, updated_at) VALUES ';
+			$q = array();
+			foreach ($toAdd as $friend) {
+				$q[]= '(' . $me->id . ', ' . $db->quote($friend) . ', '.$db->quote(date(DateTime::ATOM)).', '.$db->quote(date(DateTime::ATOM)).'), '.
+					'(' . $db->quote($friend) . ', ' . $me->id. ', '.$db->quote(date(DateTime::ATOM)).', '.$db->quote(date(DateTime::ATOM)).') ';
+			}
+			$qFriendship .= implode(', ',$q);
+
+			$db->execute($qFriendship);
+		}
+		return true;
 	}
 }
